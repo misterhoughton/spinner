@@ -1,0 +1,24 @@
+body {
+    background-color: beige;
+}
+
+#canvas {
+    animation-name: spin;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+    background-color: aliceblue;
+    mask-image: url(./img/mask_circle.svg#mask);
+}
+
+form {
+    position: relative;
+    z-index: 9999;
+}
+@keyframes spin {
+    from {
+        transform:rotate(0deg);
+    }
+    to {
+        transform:rotate(360deg);
+    }
+}

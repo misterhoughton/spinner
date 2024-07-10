@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./style.css" />
+    <title>HTML UI</title>
+    <!-- <script src="./sketch.js" type="module"></script> -->
+    <script src="./index.js" type="module"></script>
+  </head>
+  <body>
+    <main>
+      <canvas id="canvas" width="600px" height="600px"></canvas>
+      <form>
+        <label for="input_col">Colour</label>
+        <input id="input_col" type="color" />
+        <label
+          >Line Width <input id="input_lineWidth" type="range" min="1" max="50"
+        /></label>
+        <label
+          >Speed
+          <input
+            id="input_spinSpeed"
+            type="range"
+            min="0"
+            max="7500"
+            value="0"
+          />
+        </label>
+        <button id="btn_getImage">Get image</button>
+        <button id="btn_resetCanvas">Reset</button>
+      </form>
+    </main>
+  </body>
+</html>
