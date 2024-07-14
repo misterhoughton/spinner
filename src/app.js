@@ -17,8 +17,17 @@ export default function app(_w) {
   const btnResetCanvas = _w.document.getElementById("btn_resetCanvas");
   const gallery = _w.document.getElementById("gallery");
 
+  const initForm = () => {
+    GCO.forEach((op) => {
+      const optionEl = document.createElement("option");
+      optionEl.value = op;
+      optionEl.innerHTML = op;
+      selectGco.appendChild(optionEl);
+    });
+  };
+
   const initCanvas = (_canvas) => {
-    const w = _w.document.body.offsetWidth * 0.85;
+    const w = _w.document.body.offsetWidth * 0.35;
     _canvas.width = w;
     _canvas.height = w;
   };
@@ -67,13 +76,6 @@ export default function app(_w) {
     transformationService.tickFns.clear();
   };
 
-  GCO.forEach((op) => {
-    const optionEl = document.createElement("option");
-    optionEl.value = op;
-    optionEl.innerHTML = op;
-    selectGco.appendChild(optionEl);
-  });
-
   btnGetImage.addEventListener("click", (_e) => {
     _e.preventDefault();
     const newImgEl = _w.document.createElement("img");
@@ -120,6 +122,7 @@ export default function app(_w) {
   });
 
   // Go go go!
+  initForm();
   initCanvas(canvas);
   initLine(ctx);
   setCursor(Number(inputLineWidth.value), canvas);
