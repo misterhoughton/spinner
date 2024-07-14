@@ -3,22 +3,29 @@ body {
 }
 
 #canvas {
-    animation-name: spin;
-    animation-iteration-count: infinite;
-    animation-timing-function: linear;
+    margin: 50px;
     background-color: aliceblue;
-    mask-image: url(./img/mask_circle.svg#mask);
+    border-radius: 50%;
 }
 
-form {
+header {
     position: relative;
-    z-index: 9999;
+    z-index: 1;
 }
-@keyframes spin {
-    from {
-        transform:rotate(0deg);
-    }
-    to {
-        transform:rotate(360deg);
-    }
+main {
+    display: flex;
+}
+#gallery {
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    column-gap: 10px;
+    row-gap: 10px;
+}
+
+#gallery>img {
+    width: 150px;
+    height: 150px;
+    background-color: aliceblue;
+    border-radius: 50%;
 }

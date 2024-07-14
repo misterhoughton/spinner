@@ -10,13 +10,13 @@
     <script src="./index.js" type="module"></script>
   </head>
   <body>
-    <main>
-      <canvas id="canvas" width="600px" height="600px"></canvas>
+    <header>
       <form>
         <label for="input_col">Colour</label>
         <input id="input_col" type="color" />
         <label
-          >Line Width <input id="input_lineWidth" type="range" min="1" max="50"
+          >Line Width
+          <input id="input_lineWidth" type="range" min="10" max="100"
         /></label>
         <label
           >Speed
@@ -24,13 +24,18 @@
             id="input_spinSpeed"
             type="range"
             min="0"
-            max="7500"
+            max="300"
             value="0"
           />
         </label>
         <button id="btn_getImage">Get image</button>
         <button id="btn_resetCanvas">Reset</button>
       </form>
+      </header>
+      <main>
+        <canvas id="canvas" width="500px" height="500px"></canvas>
+        <div id="gallery"></div>
+      </main>
     </main>
   </body>
 </html>

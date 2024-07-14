@@ -6,15 +6,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "parcel",
+    "start": "parcel",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "parcel": "^2.12.0"
-  },
-  "dependencies": {
-    "p5": "^1.9.4"
   }
 }
