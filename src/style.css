@@ -1,5 +1,7 @@
 body {
     background-color: beige;
+    max-width: 100%;
+    overflow: hidden;
 }
 
 #canvas {

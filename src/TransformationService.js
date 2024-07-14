@@ -10,8 +10,6 @@ export class TransformationService {
   #rotationAngle = 0;
   #interval = null;
   tickFns = new Set();
-  rotationIncrement = 30;
-  speed = 0;
 
   getTransformedCoords(x, y) {
     const degreesToRadians = (degrees) => degrees * (Math.PI / 180);
@@ -36,7 +34,7 @@ export class TransformationService {
     const t = `rotate(${this.#rotationAngle}deg)`;
     this.transform(t);
     this.tickFns.forEach((fn) => fn());
-    this.#rotationAngle = this.#rotationAngle + (this.rotationIncrement % 360);
+    this.#rotationAngle = (this.#rotationAngle + this.rotationIncrement) % 360;
     this.#frame += this.framerate;
   }
 
@@ -46,6 +44,7 @@ export class TransformationService {
       this.framerate
     );
   }
+
   stop() {
     this.window.clearInterval(this.#interval);
   }

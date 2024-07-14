@@ -1,6 +1,7 @@
 import { DrawingTool } from "./DrawingTool";
 import { TransformationService } from "./TransformationService";
 import { setCursor } from "./setCursor";
+import { GCO } from "./globalCompositeOperations";
 
 export default function app(_w) {
   const canvas = _w.document.getElementById("canvas");
@@ -9,9 +10,24 @@ export default function app(_w) {
   const inputCol = _w.document.getElementById("input_col");
   const inputLineWidth = _w.document.getElementById("input_lineWidth");
   const inputSpinSpeed = _w.document.getElementById("input_spinSpeed");
+  const inputLineDash = _w.document.getElementById("input_lineDash");
+  const inputBlur = _w.document.getElementById("input_blur");
+  const selectGco = _w.document.getElementById("select_gco");
   const btnGetImage = _w.document.getElementById("btn_getImage");
   const btnResetCanvas = _w.document.getElementById("btn_resetCanvas");
   const gallery = _w.document.getElementById("gallery");
+
+  const initCanvas = (_canvas) => {
+    const w = _w.document.body.offsetWidth * 0.85;
+    _canvas.width = w;
+    _canvas.height = w;
+  };
+
+  const initLine = (_ctx) => {
+    _ctx.lineCap = "round";
+    _ctx.lineJoin = "round";
+    ctx.lineWidth = inputLineWidth.value;
+  };
 
   const _draw = (_ctx, x, y) => {
     _ctx.lineTo(x, y);
@@ -20,20 +36,21 @@ export default function app(_w) {
 
   const drawTransformed = (_e) => {
     const tc = transformationService.getTransformedCoords(_e.layerX, _e.layerY);
-    if (_e.movementX + _e.movementY === 0) {
-      _draw(ctx, tc.x, tc.y);
-    }
+    _draw(ctx, tc.x, tc.y);
   };
 
   const holdLine = (_e) => {
-    transformationService.tickFns.clear();
-    transformationService.tickFns.add(() => drawTransformed(_e));
+    const isStationery = (_e) => {
+      return _e.movementX + _e.movementY === 0;
+    };
+    if (isStationery(_e)) {
+      transformationService.tickFns.add(() => drawTransformed(_e));
+    } else {
+      transformationService.tickFns.clear();
+    }
   };
 
   const drawStart = (_e) => {
-    ctx.lineCap = "round";
-    ctx.lineJoin = "round";
-    ctx.lineWidth = inputLineWidth.value;
     ctx.strokeStyle = inputCol.value;
     ctx.beginPath();
     holdLine(_e);
@@ -50,6 +67,13 @@ export default function app(_w) {
     transformationService.tickFns.clear();
   };
 
+  GCO.forEach((op) => {
+    const optionEl = document.createElement("option");
+    optionEl.value = op;
+    optionEl.innerHTML = op;
+    selectGco.appendChild(optionEl);
+  });
+
   btnGetImage.addEventListener("click", (_e) => {
     _e.preventDefault();
     const newImgEl = _w.document.createElement("img");
@@ -63,12 +87,22 @@ export default function app(_w) {
   });
 
   inputSpinSpeed.addEventListener("change", (_e) => {
-    transformationService.rotationIncrement = _e.target.value / 100;
+    transformationService.rotationIncrement = _e.target.value * 0.01;
   });
 
-  inputLineWidth.addEventListener("change", (_e) =>
-    setCursor(Number(_e.target.value), canvas)
-  );
+  inputBlur.addEventListener("change", (_e) => {
+    ctx.filter = `blur(${_e.target.value}px)`;
+  });
+
+  inputLineWidth.addEventListener("change", (_e) => {
+    ctx.lineWidth = inputLineWidth.value;
+    setCursor(Number(_e.target.value), canvas);
+  });
+
+  inputLineDash.addEventListener("change", (_e) => {
+    let pattern = inputLineDash.value.split(" ");
+    ctx.setLineDash(pattern);
+  });
 
   _w.addEventListener("keydown", (_e) => {
     const val = Number(inputLineWidth.value);
@@ -81,6 +115,13 @@ export default function app(_w) {
     inputLineWidth.dispatchEvent(new Event("change"));
   });
 
+  selectGco.addEventListener("change", (_e) => {
+    ctx.globalCompositeOperation = _e.target.value;
+  });
+
+  // Go go go!
+  initCanvas(canvas);
+  initLine(ctx);
   setCursor(Number(inputLineWidth.value), canvas);
   new DrawingTool(canvas, drawStart, draw, drawEnd);
 }

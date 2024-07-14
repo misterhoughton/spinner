@@ -6,27 +6,39 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="./style.css" />
     <title>HTML UI</title>
-    <!-- <script src="./sketch.js" type="module"></script> -->
     <script src="./index.js" type="module"></script>
   </head>
   <body>
     <header>
+      <div id="traffic_light" style="width:20px; height:20px"></div>
       <form>
-        <label for="input_col">Colour</label>
-        <input id="input_col" type="color" />
+        <fieldset><legend>Brush stuff</legend>
+          <label for="input_col">Colour</label>
+          <input id="input_col" type="color" />
+          <label
+            >Line Width
+            <input id="input_lineWidth" type="range" min="10" max="100"
+          /></label>
+            <label>Line dash
+            <input id="input_lineDash"/>
+          </label>
+          <label>Blur
+            <input id="input_blur" type="range" min="0" max="10" value="0">
+          </label>
+        </fieldset>
+        
+        <label>Blending mode
+          <select id="select_gco"></select>
+        </label>
         <label
-          >Line Width
-          <input id="input_lineWidth" type="range" min="10" max="100"
-        /></label>
-        <label
-          >Speed
-          <input
-            id="input_spinSpeed"
-            type="range"
-            min="0"
-            max="300"
-            value="0"
-          />
+        >Speed
+        <input
+          id="input_spinSpeed"
+          type="range"
+          min="0"
+          max="300"
+          value="0"
+        />
         </label>
         <button id="btn_getImage">Get image</button>
         <button id="btn_resetCanvas">Reset</button>
