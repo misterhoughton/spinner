@@ -26,16 +26,16 @@ export class TransformationService {
     return rotate(cx, cy, x, y, this.#rotationAngle);
   }
 
-  transform(transform) {
-    this.element.style.transform = transform;
-  }
-
   tick() {
-    const t = `rotate(${this.#rotationAngle}deg)`;
-    this.transform(t);
-    this.tickFns.forEach((fn) => fn());
-    this.#rotationAngle = (this.#rotationAngle + this.rotationIncrement) % 360;
-    this.#frame += this.framerate;
+    const newRotationAngle = Math.floor(
+      (this.#rotationAngle + this.rotationIncrement) % 360
+    );
+    if (newRotationAngle !== this.#rotationAngle) {
+      this.tickFns.forEach((fn) => fn());
+      this.element.style.transform = `rotate(${this.#rotationAngle}deg)`;
+      this.#rotationAngle = newRotationAngle;
+      this.#frame += this.framerate;
+    }
   }
 
   start() {

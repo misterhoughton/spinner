@@ -27,7 +27,9 @@ export default function app(_w) {
   };
 
   const initCanvas = (_canvas) => {
-    const w = _w.document.body.offsetWidth * 0.35;
+    const w = _w.document.body.offsetWidth * 0.5;
+    const h = _w.document.body.offsetHeight * 0.5;
+    const s = w < h ? h : w;
     _canvas.width = w;
     _canvas.height = w;
   };
@@ -48,11 +50,18 @@ export default function app(_w) {
     _draw(ctx, tc.x, tc.y);
   };
 
+  let previousTouch;
   const holdLine = (_e) => {
-    const isStationery = (_e) => {
+    const isHolding = (_e) => {
       return _e.movementX + _e.movementY === 0;
     };
-    if (isStationery(_e)) {
+    const touch = _e.touches ? _e.touches[0] : null;
+    if (touch && previousTouch) {
+      _e.movementX = touch.pageX - previousTouch.pageX;
+      _e.movementY = touch.pageY - previousTouch.pageY;
+    }
+    previousTouch = touch;
+    if (isHolding(_e)) {
       transformationService.tickFns.add(() => drawTransformed(_e));
     } else {
       transformationService.tickFns.clear();
