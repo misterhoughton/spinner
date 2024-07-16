@@ -1,4 +1,4 @@
-export class TransformationService {
+export class RotationService {
   constructor(_window, _element, _framerate = 1, _rotationIncrement = 0) {
     this.window = _window;
     this.element = _element;

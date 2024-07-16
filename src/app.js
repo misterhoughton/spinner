@@ -1,11 +1,12 @@
 import { DrawingTool } from "./DrawingTool";
-import { TransformationService } from "./TransformationService";
+import { RotationService } from "./TransformationService";
 import { setCursor } from "./setCursor";
+import { brushPatterns } from "./strokeStyles/patterns";
 import { GCO } from "./globalCompositeOperations";
 
 export default function app(_w) {
   const canvas = _w.document.getElementById("canvas");
-  const transformationService = new TransformationService(_w, canvas);
+  const transformationService = new RotationService(_w, canvas);
   const ctx = canvas.getContext("2d");
   const inputCol = _w.document.getElementById("input_col");
   const inputLineWidth = _w.document.getElementById("input_lineWidth");
@@ -13,6 +14,7 @@ export default function app(_w) {
   const inputLineDash = _w.document.getElementById("input_lineDash");
   const inputBlur = _w.document.getElementById("input_blur");
   const selectGco = _w.document.getElementById("select_gco");
+  const selectBrushPattern = _w.document.getElementById("select_brushPattern");
   const btnGetImage = _w.document.getElementById("btn_getImage");
   const btnResetCanvas = _w.document.getElementById("btn_resetCanvas");
   const gallery = _w.document.getElementById("gallery");
@@ -24,17 +26,21 @@ export default function app(_w) {
       optionEl.innerHTML = op;
       selectGco.appendChild(optionEl);
     });
+    for (bp in brushPatterns) {
+      const optionEl = document.createElement("option");
+      optionEl.value = bp;
+      optionEl.innerHTML = bp;
+      selectBrushPattern.appendChild(optionEl);
+    }
   };
 
   const initCanvas = (_canvas) => {
-    const w = _w.document.body.offsetWidth * 0.5;
-    const h = _w.document.body.offsetHeight * 0.5;
-    const s = w < h ? h : w;
-    _canvas.width = w;
-    _canvas.height = w;
+    const h = _w.document.body.offsetHeight * 0.8;
+    _canvas.width = h;
+    _canvas.height = h;
   };
 
-  const initLine = (_ctx) => {
+  const resetLine = (_ctx) => {
     _ctx.lineCap = "round";
     _ctx.lineJoin = "round";
     ctx.lineWidth = inputLineWidth.value;
@@ -69,7 +75,10 @@ export default function app(_w) {
   };
 
   const drawStart = (_e) => {
-    ctx.strokeStyle = inputCol.value;
+    ctx.strokeStyle = brushPatterns[selectBrushPattern.value](
+      inputLineWidth.value,
+      inputCol.value
+    );
     ctx.beginPath();
     holdLine(_e);
   };
@@ -95,6 +104,7 @@ export default function app(_w) {
   btnResetCanvas.addEventListener("click", (_e) => {
     _e.preventDefault();
     ctx.reset();
+    resetLine(ctx);
   });
 
   inputSpinSpeed.addEventListener("change", (_e) => {
@@ -106,7 +116,7 @@ export default function app(_w) {
   });
 
   inputLineWidth.addEventListener("change", (_e) => {
-    ctx.lineWidth = inputLineWidth.value;
+    ctx.lineWidth = _e.target.value;
     setCursor(Number(_e.target.value), canvas);
   });
 
@@ -133,7 +143,7 @@ export default function app(_w) {
   // Go go go!
   initForm();
   initCanvas(canvas);
-  initLine(ctx);
+  resetLine(ctx);
   setCursor(Number(inputLineWidth.value), canvas);
   new DrawingTool(canvas, drawStart, draw, drawEnd);
 }
