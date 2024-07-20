@@ -52,7 +52,7 @@ export default function app(_w) {
   };
 
   const drawTransformed = (_e) => {
-    const tc = transformationService.getTransformedCoords(_e.layerX, _e.layerY);
+    const tc = transformationService.getRotatedCoords(_e.layerX, _e.layerY);
     _draw(ctx, tc.x, tc.y);
   };
 

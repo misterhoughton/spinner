@@ -1,8 +1,58 @@
+import { rotatePoint } from "../transformation.utilities";
+
 export const brushPatterns = {
+  defaultPattern,
+  cubePattern,
   hatchPattern,
   starPattern,
   scratchyPattern,
 };
+function defaultPattern(size, col) {
+  const canvas = new OffscreenCanvas(size, size);
+  const ctx = canvas.getContext("2d");
+  const c = Math.floor(size / 2);
+  const s = size;
+  const count = 2;
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+
+  // ctx.strokeRect(0, 0, size, size);
+  // ctx.arc(c, c, c, 0, 2 * Math.PI);
+  for (
+    let i = Math.floor(size / count);
+    i < size;
+    i += Math.floor(size / count)
+  ) {
+    ctx.moveTo(0, i);
+    ctx.lineTo(s, i);
+  }
+  ctx.rotate(45);
+
+  ctx.rotate((45 * Math.PI) / 180);
+  ctx.strokeStyle = col;
+  ctx.stroke();
+  ctx.translate(c, c);
+  return ctx.createPattern(canvas, "repeat");
+}
+
+function cubePattern(size, col) {
+  const canvas = new OffscreenCanvas(size, size);
+  const ctx = canvas.getContext("2d");
+  const c = Math.floor(size / 2);
+  const sides = 6;
+  // ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.arc(c, c, c, 0, 2 * Math.PI);
+  ctx.moveTo(c, 0);
+  for (let i = 1; i < 360; i = i + 360 / sides) {
+    const p = rotatePoint(c, c, c, 0, i);
+    ctx.lineTo(p.x, p.y);
+  }
+  ctx.closePath();
+  ctx.fillStyle = col;
+  ctx.fill();
+  return ctx.createPattern(canvas, "repeat");
+}
 
 function hatchPattern(size, col) {
   const canvas = new OffscreenCanvas(size, size);

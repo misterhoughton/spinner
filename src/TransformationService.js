@@ -1,3 +1,5 @@
+import { rotatePoint } from "./transformation.utilities";
+
 export class RotationService {
   constructor(_window, _element, _framerate = 1, _rotationIncrement = 0) {
     this.window = _window;
@@ -11,19 +13,10 @@ export class RotationService {
   #interval = null;
   tickFns = new Set();
 
-  getTransformedCoords(x, y) {
-    const degreesToRadians = (degrees) => degrees * (Math.PI / 180);
-    const rotate = (cx, cy, x, y, degrees) => {
-      const radians = degreesToRadians(degrees);
-      const cos = Math.cos(radians);
-      const sin = Math.sin(radians);
-      const nx = cos * (x - cx) + sin * (y - cy) + cx;
-      const ny = cos * (y - cy) - sin * (x - cx) + cy;
-      return { x: Math.round(nx), y: Math.round(ny) };
-    };
+  getRotatedCoords(x, y) {
     const cx = this.element.width / 2;
     const cy = this.element.height / 2;
-    return rotate(cx, cy, x, y, this.#rotationAngle);
+    return rotatePoint(cx, cy, x, y, this.#rotationAngle);
   }
 
   tick() {
