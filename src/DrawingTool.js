@@ -1,7 +1,7 @@
-const noOp = () => {};
+const noop = () => {};
 
 export class DrawingTool {
-  constructor(element, drawStart = noOp, draw = noOp, drawEnd = noOp) {
+  constructor(element, drawStart = noop, draw = noop, drawEnd = noop) {
     const _downHandler = (e) => {
       drawStart(e);
       element.addEventListener("mousemove", draw);
