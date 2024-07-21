@@ -1,5 +1,5 @@
 import { DrawingTool } from "./DrawingTool";
-import { RotationService } from "./TransformationService";
+import { RotationService } from "./RotationService";
 import { setCursor } from "./setCursor";
 import { brushPatterns } from "./strokeStyles/patterns";
 import { GCO } from "./globalCompositeOperations";
@@ -108,7 +108,7 @@ export default function app(_w) {
   });
 
   inputSpinSpeed.addEventListener("change", (_e) => {
-    transformationService.rotationIncrement = _e.target.value * 0.01;
+    transformationService.rotationIncrement = _e.target.value * 0.025;
   });
 
   inputBlur.addEventListener("change", (_e) => {
