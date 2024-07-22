@@ -1,4 +1,4 @@
-import { rotatePoint, degreesToRadians } from "./transformation.utilities";
+import { rotatePoint } from "./transformation.utilities";
 
 export class RotationService {
   constructor(_window, _canvas, _framerate = 30, _rotationIncrement = 0) {
@@ -11,7 +11,7 @@ export class RotationService {
   }
   #frame = 0;
   #rotationAngle = 0;
-  #previousTimeStamp;
+  #previousTimeStamp = 0;
   tickFns = new Set();
 
   getRotatedCoords(x, y) {
@@ -24,17 +24,12 @@ export class RotationService {
     const newRotationAngle = Math.floor(
       (this.#rotationAngle + this.rotationIncrement) % 360
     );
-    if (this.#previousTimeStamp === undefined) {
-      this.#previousTimeStamp = timeStamp;
-    }
     if (timeStamp > this.#previousTimeStamp + this.framerate) {
       this.#previousTimeStamp = timeStamp;
-      if (newRotationAngle !== this.#rotationAngle) {
-        this.tickFns.forEach((fn) => fn());
-        this.canvas.style.transform = `rotate(${this.#rotationAngle}deg)`;
-        this.#rotationAngle = newRotationAngle;
-        this.#frame += this.framerate;
-      }
+      this.tickFns.forEach((fn) => fn());
+      this.canvas.style.transform = `rotate(${this.#rotationAngle}deg)`;
+      this.#rotationAngle = newRotationAngle;
+      this.#frame += this.framerate;
     }
     this.window.requestAnimationFrame(this.tick.bind(this));
   }

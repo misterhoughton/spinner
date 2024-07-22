@@ -1,22 +1,22 @@
 const noop = () => {};
 
 export class DrawingTool {
-  constructor(element, drawStart = noop, draw = noop, drawEnd = noop) {
+  constructor(canvas, drawStart = noop, draw = noop, drawEnd = noop) {
     const _downHandler = (e) => {
       drawStart(e);
-      element.addEventListener("mousemove", draw);
-      element.addEventListener("mouseup", _upHandler);
-      element.addEventListener("mouseleave", _leaveHandler);
-      element.addEventListener("touchstart", draw);
-      element.addEventListener("touchend", _upHandler);
+      canvas.addEventListener("mousemove", draw);
+      canvas.addEventListener("touchmove", draw, { passive: true });
+      canvas.addEventListener("mouseup", _upHandler);
+      canvas.addEventListener("touchend", _upHandler, { passive: true });
+      canvas.addEventListener("mouseleave", _leaveHandler);
     };
     const _upHandler = (_e) => {
       drawEnd(_e);
-      element.removeEventListener("mousemove", draw);
-      element.removeEventListener("mouseup", _upHandler);
-      element.removeEventListener("mouseleave", _leaveHandler);
-      element.removeEventListener("touchstart", draw);
-      element.removeEventListener("touchend", _upHandler);
+      canvas.removeEventListener("mousemove", draw);
+      canvas.removeEventListener("touchmove", draw);
+      canvas.removeEventListener("mouseup", _upHandler);
+      canvas.removeEventListener("touchend", _upHandler);
+      canvas.removeEventListener("mouseleave", _leaveHandler);
     };
     const _leaveHandler = (e) => {
       _upHandler(e);
@@ -26,9 +26,9 @@ export class DrawingTool {
         _downHandler(e);
       }
     };
-    element.addEventListener("mousedown", _downHandler);
-    element.addEventListener("mouseenter", _enterHandler);
-    element.addEventListener("touchstart", _downHandler);
-    element.addEventListener("touchend", _enterHandler);
+    canvas.addEventListener("mousedown", _downHandler);
+    canvas.addEventListener("mouseenter", _enterHandler);
+    canvas.addEventListener("touchstart", _downHandler, { passive: true });
+    canvas.addEventListener("touchend", _enterHandler, { passive: true });
   }
 }

@@ -51,8 +51,8 @@ export default function app(_w) {
     _ctx.stroke();
   };
 
-  const drawTransformed = (_e) => {
-    const tc = transformationService.getRotatedCoords(_e.layerX, _e.layerY);
+  const drawTransformed = (x, y) => {
+    const tc = transformationService.getRotatedCoords(x, y);
     _draw(ctx, tc.x, tc.y);
   };
 
@@ -61,14 +61,19 @@ export default function app(_w) {
     const isHolding = (_e) => {
       return _e.movementX + _e.movementY === 0;
     };
-    const touch = _e.touches ? _e.touches[0] : null;
-    if (touch && previousTouch) {
-      _e.movementX = touch.pageX - previousTouch.pageX;
-      _e.movementY = touch.pageY - previousTouch.pageY;
+    const touch = _e.touches ? _e.touches.item(0) : null;
+    const changedTouch = _e.changedTouches ? _e.changedTouches.item(0) : null;
+    if (touch && changedTouch) {
+      _e.movementX = touch.pageX - changedTouch.pageX;
+      _e.movementY = touch.pageY - changedTouch.pageY;
+      _e.layerX = touch.clientX - touch.target.offsetLeft;
+      _e.layerY = touch.clientY - touch.target.offsetTop;
     }
     previousTouch = touch;
     if (isHolding(_e)) {
-      transformationService.tickFns.add(() => drawTransformed(_e));
+      transformationService.tickFns.add(() =>
+        drawTransformed(_e.layerX, _e.layerY)
+      );
     } else {
       transformationService.tickFns.clear();
     }
@@ -84,6 +89,11 @@ export default function app(_w) {
   };
 
   const draw = (_e) => {
+    const touch = _e.touches ? _e.touches.item(0) : null;
+    if (touch) {
+      _e.offsetX = touch.clientX - touch.target.offsetLeft;
+      _e.offsetY = touch.clientY - touch.target.offsetTop;
+    }
     transformationService.tickFns.clear();
     _draw(ctx, _e.offsetX, _e.offsetY);
     holdLine(_e);

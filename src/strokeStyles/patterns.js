@@ -1,23 +1,36 @@
-import { rotatePoint } from "../transformation.utilities";
+import { rotatePoint, degreesToRadians } from "../transformation.utilities";
 
 export const brushPatterns = {
   defaultPattern,
+  stripesPattern,
   cubePattern,
   hatchPattern,
   starPattern,
   scratchyPattern,
 };
+
 function defaultPattern(size, col) {
+  const canvas = new OffscreenCanvas(size, size);
+  const ctx = canvas.getContext("2d");
+  ctx.fillStyle = col;
+  ctx.fillRect(0, 0, size, size);
+  return ctx.createPattern(canvas, "repeat");
+}
+
+function stripesPattern(size, col) {
   const canvas = new OffscreenCanvas(size, size);
   const ctx = canvas.getContext("2d");
   const c = Math.floor(size / 2);
   const s = size;
-  const count = 2;
+  const count = 10;
   ctx.lineWidth = 1;
   ctx.beginPath();
 
   // ctx.strokeRect(0, 0, size, size);
   // ctx.arc(c, c, c, 0, 2 * Math.PI);
+  // ctx.translate(-s, -s);
+  ctx.rotate(degreesToRadians(45));
+
   for (
     let i = Math.floor(size / count);
     i < size;
@@ -26,12 +39,9 @@ function defaultPattern(size, col) {
     ctx.moveTo(0, i);
     ctx.lineTo(s, i);
   }
-  ctx.rotate(45);
 
-  ctx.rotate((45 * Math.PI) / 180);
   ctx.strokeStyle = col;
   ctx.stroke();
-  ctx.translate(c, c);
   return ctx.createPattern(canvas, "repeat");
 }
 
