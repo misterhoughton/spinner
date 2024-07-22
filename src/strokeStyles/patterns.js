@@ -2,6 +2,7 @@ import { rotatePoint, degreesToRadians } from "../transformation.utilities";
 
 export const brushPatterns = {
   defaultPattern,
+  chequerPattern,
   stripesPattern,
   cubePattern,
   hatchPattern,
@@ -14,6 +15,21 @@ function defaultPattern(size, col) {
   const ctx = canvas.getContext("2d");
   ctx.fillStyle = col;
   ctx.fillRect(0, 0, size, size);
+  return ctx.createPattern(canvas, "repeat");
+}
+
+function chequerPattern(size, colour) {
+  const canvas = new OffscreenCanvas(size, size);
+  const ctx = canvas.getContext("2d");
+  const gridRows = 3;
+
+  for (let row = 0; row < gridRows; row++) {
+    for (let column = 0; column < gridRows; column++) {
+      ctx.fillStyle = (row + column) % 2 === 0 ? colour : "#fff";
+      ctx.fillRect(row, column, size / row, size / column);
+    }
+  }
+
   return ctx.createPattern(canvas, "repeat");
 }
 
