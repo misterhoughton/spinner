@@ -6,8 +6,11 @@ body {
 
 #canvas {
     margin: 50px;
-    background-color: aliceblue;
     border-radius: 50%;
+}
+
+#thumb_brushPattern, #canvas {
+    background-color: aliceblue;
 }
 
 header {

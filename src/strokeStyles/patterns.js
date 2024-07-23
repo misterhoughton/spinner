@@ -19,14 +19,17 @@ function defaultPattern(size, col) {
 }
 
 function chequerPattern(size, colour) {
-  const canvas = new OffscreenCanvas(size, size);
+  const colTransparent = "rgba(255, 255, 255, 0)";
+  const gridRows = 2;
+  const gridSize = Math.floor(size / gridRows);
+  const actualSize = gridRows * gridSize;
+  const canvas = new OffscreenCanvas(actualSize, actualSize);
   const ctx = canvas.getContext("2d");
-  const gridRows = 3;
 
   for (let row = 0; row < gridRows; row++) {
     for (let column = 0; column < gridRows; column++) {
-      ctx.fillStyle = (row + column) % 2 === 0 ? colour : "#fff";
-      ctx.fillRect(row, column, size / row, size / column);
+      ctx.fillStyle = (row + column) % 2 === 0 ? colour : colTransparent;
+      ctx.fillRect(column * gridSize, row * gridSize, gridSize, gridSize);
     }
   }
 
@@ -42,9 +45,6 @@ function stripesPattern(size, col) {
   ctx.lineWidth = 1;
   ctx.beginPath();
 
-  // ctx.strokeRect(0, 0, size, size);
-  // ctx.arc(c, c, c, 0, 2 * Math.PI);
-  // ctx.translate(-s, -s);
   ctx.rotate(degreesToRadians(45));
 
   for (
@@ -66,7 +66,6 @@ function cubePattern(size, col) {
   const ctx = canvas.getContext("2d");
   const c = Math.floor(size / 2);
   const sides = 6;
-  // ctx.lineWidth = 1;
   ctx.beginPath();
   ctx.arc(c, c, c, 0, 2 * Math.PI);
   ctx.moveTo(c, 0);

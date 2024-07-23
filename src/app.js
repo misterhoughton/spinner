@@ -26,7 +26,7 @@ export default function app(_w) {
       optionEl.innerHTML = op;
       selectGco.appendChild(optionEl);
     });
-    for (bp in brushPatterns) {
+    for (let bp in brushPatterns) {
       const optionEl = document.createElement("option");
       optionEl.value = bp;
       optionEl.innerHTML = bp;
@@ -133,6 +133,18 @@ export default function app(_w) {
   inputLineDash.addEventListener("change", (_e) => {
     let pattern = inputLineDash.value.split(" ");
     ctx.setLineDash(pattern);
+  });
+
+  selectBrushPattern.addEventListener("change", (_e) => {
+    const thumbBrushStyle = _w.document.getElementById("thumb_brushPattern");
+    const thumbBrushStyleCtx = thumbBrushStyle.getContext("2d");
+    const thumbParams = [0, 0, thumbBrushStyle.width, thumbBrushStyle.height];
+    thumbBrushStyleCtx.clearRect(...thumbParams);
+    thumbBrushStyleCtx.fillStyle = brushPatterns[_e.target.value](
+      thumbBrushStyle.width,
+      inputCol.value
+    );
+    thumbBrushStyleCtx.fillRect(...thumbParams);
   });
 
   _w.addEventListener("keydown", (_e) => {

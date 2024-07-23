@@ -1,7 +1,12 @@
 import { rotatePoint } from "./transformation.utilities";
 
 export class RotationService {
-  constructor(_window, _canvas, _framerate = 30, _rotationIncrement = 0) {
+  constructor(
+    _window,
+    _canvas,
+    _framerate = 1000 / 200,
+    _rotationIncrement = 0
+  ) {
     this.window = _window;
     this.canvas = _canvas;
     this.ctx = this.canvas.getContext("2d");
@@ -31,7 +36,7 @@ export class RotationService {
       this.#rotationAngle = newRotationAngle;
       this.#frame += this.framerate;
     }
-    this.window.requestAnimationFrame(this.tick.bind(this));
+    this.start();
   }
 
   start() {
