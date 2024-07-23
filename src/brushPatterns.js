@@ -3,7 +3,8 @@ import { rotatePoint, degreesToRadians } from "./transformation.utilities";
 export const brushPatterns = {
   defaultPattern,
   chequerPattern,
-  stripesPattern,
+  stripesNWPattern,
+  stripesNEPattern,
   gridPattern,
   hatchPattern,
   starPattern,
@@ -36,29 +37,48 @@ function chequerPattern(size, colour) {
   return ctx.createPattern(canvas, "repeat");
 }
 
-function stripesPattern(size, col) {
+function stripesNWPattern(size, col) {
   const stripeCount = 10;
   const stripeWidth = Math.floor(size / stripeCount);
   const actualSize = stripeCount * stripeWidth;
   const canvas = new OffscreenCanvas(actualSize, actualSize);
   const ctx = canvas.getContext("2d");
-  const s = size;
-  const count = 10;
   ctx.lineWidth = 1;
   ctx.beginPath();
 
-  ctx.rotate(degreesToRadians());
-
-  for (let i = 0; i < stripeCount; i++) {
-    ctx.moveTo(i * stripeWidth, 0);
-    ctx.lineTo(actualSize, actualSize - i * stripeWidth);
-    ctx.moveTo(0, i * stripeWidth);
-    ctx.lineTo(actualSize - i * stripeWidth, actualSize);
-  }
+  drawDiagonalStripes(stripeCount, ctx, stripeWidth, actualSize);
 
   ctx.strokeStyle = col;
   ctx.stroke();
   return ctx.createPattern(canvas, "repeat");
+}
+
+function stripesNEPattern(size, col) {
+  const stripeCount = 10;
+  const stripeWidth = Math.floor(size / stripeCount);
+  const actualSize = stripeCount * stripeWidth;
+  const canvas = new OffscreenCanvas(actualSize, actualSize);
+  const ctx = canvas.getContext("2d");
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+
+  ctx.translate(actualSize, 0);
+  ctx.scale(-1, 1);
+
+  drawDiagonalStripes(stripeCount, ctx, stripeWidth, actualSize);
+
+  ctx.strokeStyle = col;
+  ctx.stroke();
+  return ctx.createPattern(canvas, "repeat");
+}
+
+function drawDiagonalStripes(stripeCount, ctx, stripeWidth, size) {
+  for (let i = 0; i < stripeCount; i++) {
+    ctx.moveTo(i * stripeWidth, 0);
+    ctx.lineTo(size, size - i * stripeWidth);
+    ctx.moveTo(0, i * stripeWidth);
+    ctx.lineTo(size - i * stripeWidth, size);
+  }
 }
 
 function gridPattern(size, col) {
@@ -68,18 +88,15 @@ function gridPattern(size, col) {
   const canvas = new OffscreenCanvas(actualSize, actualSize);
 
   const ctx = canvas.getContext("2d");
-  const c = Math.floor(size / 2);
-  const sides = 6;
 
   ctx.beginPath();
-  for (let column = 0; column < gridRows; column++) {
-    ctx.moveTo(column * gridSize, 0);
-    ctx.lineTo(column * gridSize, actualSize);
+  for (let i = 0; i < gridRows; i++) {
+    ctx.moveTo(i * gridSize, 0);
+    ctx.lineTo(i * gridSize, actualSize);
+    ctx.moveTo(0, i * gridSize);
+    ctx.lineTo(actualSize, i * gridSize);
   }
-  for (let row = 0; row < gridRows; row++) {
-    ctx.moveTo(0, row * gridSize, 0);
-    ctx.lineTo(actualSize, row * gridSize);
-  }
+
   ctx.closePath();
   ctx.strokeStyle = col;
   ctx.stroke();

@@ -1,27 +1,5 @@
+@import url("styles/scaffolding.scss");
+@import url("styles/typography.scss");
 @import url("styles/gallery.scss");
 @import url("styles/canvas.scss");
-
-body {
-  background-color: beige;
-  max-width: 100%;
-  overflow: hidden;
-}
-
-#canvas {
-  margin: 50px;
-  border-radius: 50%;
-}
-
-#thumb_brushPattern,
-#canvas {
-  background-color: aliceblue;
-}
-
-header {
-  position: relative;
-  z-index: 1;
-}
-
-main {
-  display: flex;
-}
+@import url("styles/form.scss");

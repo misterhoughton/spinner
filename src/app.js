@@ -35,7 +35,7 @@ export default function app(_w) {
   };
 
   const initCanvas = (_canvas) => {
-    const h = _w.document.body.offsetHeight * 0.8;
+    const h = _w.document.body.offsetHeight * 2.75;
     _canvas.width = h;
     _canvas.height = h;
   };

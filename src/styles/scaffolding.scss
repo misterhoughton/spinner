@@ -1,0 +1,17 @@
+body {
+  background-color: beige;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.container {
+  display: flex;
+}
+
+main {
+  width: 66%;
+}
+
+.left {
+  width: 33%;
+}
