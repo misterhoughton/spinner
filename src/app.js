@@ -1,7 +1,7 @@
 import { DrawingTool } from "./DrawingTool";
 import { RotationService } from "./RotationService";
 import { setCursor } from "./setCursor";
-import { brushPatterns } from "./strokeStyles/patterns";
+import { brushPatterns } from "./brushPatterns";
 import { GCO } from "./globalCompositeOperations";
 
 export default function app(_w) {

@@ -1,0 +1,14 @@
+#gallery {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  column-gap: 10px;
+  row-gap: 10px;
+}
+
+#gallery > img {
+  width: 150px;
+  height: 150px;
+  background-color: aliceblue;
+  border-radius: 50%;
+}

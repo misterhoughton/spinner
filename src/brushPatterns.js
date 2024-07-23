@@ -1,10 +1,10 @@
-import { rotatePoint, degreesToRadians } from "../transformation.utilities";
+import { rotatePoint, degreesToRadians } from "./transformation.utilities";
 
 export const brushPatterns = {
   defaultPattern,
   chequerPattern,
   stripesPattern,
-  cubePattern,
+  gridPattern,
   hatchPattern,
   starPattern,
   scratchyPattern,
@@ -37,23 +37,23 @@ function chequerPattern(size, colour) {
 }
 
 function stripesPattern(size, col) {
-  const canvas = new OffscreenCanvas(size, size);
+  const stripeCount = 10;
+  const stripeWidth = Math.floor(size / stripeCount);
+  const actualSize = stripeCount * stripeWidth;
+  const canvas = new OffscreenCanvas(actualSize, actualSize);
   const ctx = canvas.getContext("2d");
-  const c = Math.floor(size / 2);
   const s = size;
   const count = 10;
   ctx.lineWidth = 1;
   ctx.beginPath();
 
-  ctx.rotate(degreesToRadians(45));
+  ctx.rotate(degreesToRadians());
 
-  for (
-    let i = Math.floor(size / count);
-    i < size;
-    i += Math.floor(size / count)
-  ) {
-    ctx.moveTo(0, i);
-    ctx.lineTo(s, i);
+  for (let i = 0; i < stripeCount; i++) {
+    ctx.moveTo(i * stripeWidth, 0);
+    ctx.lineTo(actualSize, actualSize - i * stripeWidth);
+    ctx.moveTo(0, i * stripeWidth);
+    ctx.lineTo(actualSize - i * stripeWidth, actualSize);
   }
 
   ctx.strokeStyle = col;
@@ -61,21 +61,28 @@ function stripesPattern(size, col) {
   return ctx.createPattern(canvas, "repeat");
 }
 
-function cubePattern(size, col) {
-  const canvas = new OffscreenCanvas(size, size);
+function gridPattern(size, col) {
+  const gridRows = 3;
+  const gridSize = Math.floor(size / gridRows);
+  const actualSize = gridRows * gridSize;
+  const canvas = new OffscreenCanvas(actualSize, actualSize);
+
   const ctx = canvas.getContext("2d");
   const c = Math.floor(size / 2);
   const sides = 6;
+
   ctx.beginPath();
-  ctx.arc(c, c, c, 0, 2 * Math.PI);
-  ctx.moveTo(c, 0);
-  for (let i = 1; i < 360; i = i + 360 / sides) {
-    const p = rotatePoint(c, c, c, 0, i);
-    ctx.lineTo(p.x, p.y);
+  for (let column = 0; column < gridRows; column++) {
+    ctx.moveTo(column * gridSize, 0);
+    ctx.lineTo(column * gridSize, actualSize);
+  }
+  for (let row = 0; row < gridRows; row++) {
+    ctx.moveTo(0, row * gridSize, 0);
+    ctx.lineTo(actualSize, row * gridSize);
   }
   ctx.closePath();
-  ctx.fillStyle = col;
-  ctx.fill();
+  ctx.strokeStyle = col;
+  ctx.stroke();
   return ctx.createPattern(canvas, "repeat");
 }
 
