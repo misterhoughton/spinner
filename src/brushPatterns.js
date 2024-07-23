@@ -88,7 +88,7 @@ function gridPattern(size, col) {
   const canvas = new OffscreenCanvas(actualSize, actualSize);
 
   const ctx = canvas.getContext("2d");
-
+  ctx.translate(0.5, 0.5);
   ctx.beginPath();
   for (let i = 0; i < gridRows; i++) {
     ctx.moveTo(i * gridSize, 0);
