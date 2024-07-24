@@ -1,13 +1,6 @@
+import { blobToDataURL } from "./utilities";
+
 export async function setCursor(size, target) {
-  const blobToDataURL = async (_blob) => {
-    return new Promise((res, rej) => {
-      const fr = new FileReader();
-      fr.onload = (e) => {
-        res(e.target.result);
-      };
-      fr.readAsDataURL(blob);
-    });
-  };
   const clip = (_ctx) => {
     _ctx.save();
     _ctx.clip();

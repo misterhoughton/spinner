@@ -3,8 +3,10 @@ import { RotationService } from "./RotationService";
 import { setCursor } from "./setCursor";
 import { brushPatterns } from "./brushPatterns";
 import { GCO } from "./globalCompositeOperations";
+import { blobToDataURL } from "./utilities";
 
 export default function app(_w) {
+  const undoStack = [];
   const canvas = _w.document.getElementById("canvas");
   const transformationService = new RotationService(_w, canvas);
   const ctx = canvas.getContext("2d");
@@ -17,6 +19,7 @@ export default function app(_w) {
   const selectBrushPattern = _w.document.getElementById("select_brushPattern");
   const btnGetImage = _w.document.getElementById("btn_getImage");
   const btnResetCanvas = _w.document.getElementById("btn_resetCanvas");
+  const btnUndo = _w.document.getElementById("btn_undo");
   const gallery = _w.document.getElementById("gallery");
 
   const initForm = () => {
@@ -80,6 +83,8 @@ export default function app(_w) {
   };
 
   const drawStart = (_e) => {
+    canvas.toBlob((b) => undoStack.push(b));
+
     ctx.strokeStyle = brushPatterns[selectBrushPattern.value](
       inputLineWidth.value,
       inputCol.value
@@ -115,6 +120,25 @@ export default function app(_w) {
     _e.preventDefault();
     ctx.reset();
     resetLine(ctx);
+  });
+
+  btnUndo.addEventListener("click", (_e) => {
+    _e.preventDefault();
+
+    if (undoStack.length) {
+      const b = undoStack.pop();
+      blobToDataURL(b).then((dataUrl) => {
+        const image = new Image(60, 45);
+        image.src = dataUrl;
+        ctx.save();
+        ctx.fillStyle = "aliceblue";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.restore();
+        image.onload = () => {
+          ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+        };
+      });
+    }
   });
 
   inputSpinSpeed.addEventListener("change", (_e) => {

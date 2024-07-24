@@ -1,7 +1,8 @@
-import { rotatePoint, degreesToRadians } from "./transformation.utilities";
+import { rotatePoint, degreesToRadians } from "./utilities";
 
 export const brushPatterns = {
   defaultPattern,
+  crossPattern,
   chequerPattern,
   stripesNWPattern,
   stripesNEPattern,
@@ -16,6 +17,26 @@ function defaultPattern(size, col) {
   const ctx = canvas.getContext("2d");
   ctx.fillStyle = col;
   ctx.fillRect(0, 0, size, size);
+  return ctx.createPattern(canvas, "repeat");
+}
+
+function crossPattern(size, col) {
+  const gridRows = 8;
+  const gridSize = Math.floor(size / gridRows);
+  const actualSize = gridRows * gridSize;
+  const canvas = new OffscreenCanvas(actualSize, actualSize);
+  const ctx = canvas.getContext("2d");
+
+  ctx.beginPath();
+
+  ctx.moveTo(gridSize * 4, gridSize * 2);
+  ctx.lineTo(gridSize * 4, gridSize * 6);
+  ctx.moveTo(gridSize * 2, gridSize * 4);
+  ctx.lineTo(gridSize * 6, gridSize * 4);
+
+  ctx.closePath();
+  ctx.strokeStyle = col;
+  ctx.stroke();
   return ctx.createPattern(canvas, "repeat");
 }
 
@@ -38,15 +59,16 @@ function chequerPattern(size, colour) {
 }
 
 function stripesNWPattern(size, col) {
-  const stripeCount = 10;
-  const stripeWidth = Math.floor(size / stripeCount);
-  const actualSize = stripeCount * stripeWidth;
+  const gridRows = 5;
+  const gridSize = Math.floor(size / gridRows);
+  const actualSize = gridRows * gridSize;
   const canvas = new OffscreenCanvas(actualSize, actualSize);
   const ctx = canvas.getContext("2d");
+
   ctx.lineWidth = 1;
   ctx.beginPath();
 
-  drawDiagonalStripes(stripeCount, ctx, stripeWidth, actualSize);
+  drawDiagonalStripes(ctx, gridRows, gridSize, actualSize);
 
   ctx.strokeStyle = col;
   ctx.stroke();
@@ -54,9 +76,9 @@ function stripesNWPattern(size, col) {
 }
 
 function stripesNEPattern(size, col) {
-  const stripeCount = 10;
-  const stripeWidth = Math.floor(size / stripeCount);
-  const actualSize = stripeCount * stripeWidth;
+  const gridRows = 5;
+  const gridSize = Math.floor(size / gridRows);
+  const actualSize = gridRows * gridSize;
   const canvas = new OffscreenCanvas(actualSize, actualSize);
   const ctx = canvas.getContext("2d");
   ctx.lineWidth = 1;
@@ -65,14 +87,14 @@ function stripesNEPattern(size, col) {
   ctx.translate(actualSize, 0);
   ctx.scale(-1, 1);
 
-  drawDiagonalStripes(stripeCount, ctx, stripeWidth, actualSize);
+  drawDiagonalStripes(ctx, gridRows, gridSize, actualSize);
 
   ctx.strokeStyle = col;
   ctx.stroke();
   return ctx.createPattern(canvas, "repeat");
 }
 
-function drawDiagonalStripes(stripeCount, ctx, stripeWidth, size) {
+function drawDiagonalStripes(ctx, stripeCount, stripeWidth, size) {
   for (let i = 0; i < stripeCount; i++) {
     ctx.moveTo(i * stripeWidth, 0);
     ctx.lineTo(size, size - i * stripeWidth);
@@ -86,8 +108,8 @@ function gridPattern(size, col) {
   const gridSize = Math.floor(size / gridRows);
   const actualSize = gridRows * gridSize;
   const canvas = new OffscreenCanvas(actualSize, actualSize);
-
   const ctx = canvas.getContext("2d");
+
   ctx.translate(0.5, 0.5);
   ctx.beginPath();
   for (let i = 0; i < gridRows; i++) {

@@ -1,4 +1,4 @@
-import { rotatePoint } from "./transformation.utilities";
+import { rotatePoint } from "./utilities";
 
 export class RotationService {
   constructor(
