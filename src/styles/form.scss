@@ -1,2 +1,35 @@
-form {
+$formColour: #d946a3;
+
+fieldset {
+  padding: 1em 1.5em 1.5em;
+  border: 1px solid $formColour;
+  background: rgba(255, 255, 255, 0.3);
+  legend {
+    font-size: 1.3em;
+    color: $formColour;
+  }
+  label {
+    display: block;
+    font-size: 0.85em;
+    color: $formColour;
+    input,
+    select {
+      margin-top: 0.25em;
+      display: block;
+    }
+  }
+  .form-row {
+    display: flex;
+    margin-bottom: 1em;
+    align-items: center;
+    & > * {
+      margin-right: 1em;
+    }
+  }
+  box-shadow: 0 0 50px #dbd4cfb3;
+}
+
+input[type="color"] {
+  height: 50px;
+  width: 50px;
 }

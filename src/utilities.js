@@ -13,7 +13,7 @@ export function rotatePoint(cx, cy, x, y, degrees) {
   return { x: Math.round(nx), y: Math.round(ny) };
 }
 
-// gets hexagon incircle from circumcircle
+// Gets hexagon incircle from circumcircle
 // https://calcresource.com/geom-hexagon.html
 export function polyCircToIncirc(circ) {
   const sin = Math.sin(degreesToRadians(60));

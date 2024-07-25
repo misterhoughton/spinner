@@ -4,9 +4,9 @@ import { setCursor } from "./setCursor";
 import { brushPatterns } from "./brushPatterns";
 import { GCO } from "./globalCompositeOperations";
 import { blobToDataURL } from "./utilities";
+import { UndoManager } from "./UndoManager";
 
 export default function app(_w) {
-  const undoStack = [];
   const canvas = _w.document.getElementById("canvas");
   const transformationService = new RotationService(_w, canvas);
   const ctx = canvas.getContext("2d");
@@ -21,6 +21,8 @@ export default function app(_w) {
   const btnResetCanvas = _w.document.getElementById("btn_resetCanvas");
   const btnUndo = _w.document.getElementById("btn_undo");
   const gallery = _w.document.getElementById("gallery");
+  const thumbBrushStyle = _w.document.getElementById("thumb_brushPattern");
+  const undoManager = new UndoManager();
 
   const initForm = () => {
     GCO.forEach((op) => {
@@ -38,7 +40,7 @@ export default function app(_w) {
   };
 
   const initCanvas = (_canvas) => {
-    const h = _w.document.body.offsetHeight * 2.75;
+    const h = _w.document.body.offsetHeight * 1.85;
     _canvas.width = h;
     _canvas.height = h;
   };
@@ -83,7 +85,7 @@ export default function app(_w) {
   };
 
   const drawStart = (_e) => {
-    canvas.toBlob((b) => undoStack.push(b));
+    canvas.toBlob((b) => undoManager.addToStack(b));
 
     ctx.strokeStyle = brushPatterns[selectBrushPattern.value](
       inputLineWidth.value,
@@ -109,10 +111,15 @@ export default function app(_w) {
     transformationService.tickFns.clear();
   };
 
-  btnGetImage.addEventListener("click", (_e) => {
-    _e.preventDefault();
+  btnGetImage.addEventListener("click", (e) => {
+    e.preventDefault();
     const newImgEl = _w.document.createElement("img");
     newImgEl.src = canvas.toDataURL();
+
+    newImgEl.addEventListener("click", (_e) => {
+      ctx.drawImage(newImgEl, 0, 0, canvas.width, canvas.height);
+    });
+
     gallery.appendChild(newImgEl);
   });
 
@@ -125,8 +132,8 @@ export default function app(_w) {
   btnUndo.addEventListener("click", (_e) => {
     _e.preventDefault();
 
-    if (undoStack.length) {
-      const b = undoStack.pop();
+    if (undoManager.length) {
+      const b = undoManager.pop();
       blobToDataURL(b).then((dataUrl) => {
         const image = new Image(60, 45);
         image.src = dataUrl;
@@ -160,7 +167,6 @@ export default function app(_w) {
   });
 
   selectBrushPattern.addEventListener("change", (_e) => {
-    const thumbBrushStyle = _w.document.getElementById("thumb_brushPattern");
     const thumbBrushStyleCtx = thumbBrushStyle.getContext("2d");
     const thumbParams = [0, 0, thumbBrushStyle.width, thumbBrushStyle.height];
     thumbBrushStyleCtx.clearRect(...thumbParams);
