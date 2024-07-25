@@ -156,6 +156,13 @@ export default function app(_w) {
     ctx.filter = `blur(${_e.target.value}px)`;
   });
 
+  inputCol.addEventListener("change", (_e) => {
+    const headings = _w.document.getElementsByTagName("h1");
+    for (let h of headings) {
+      h.style.color = _e.target.value;
+    }
+  });
+
   inputLineWidth.addEventListener("change", (_e) => {
     ctx.lineWidth = _e.target.value;
     setCursor(Number(_e.target.value), canvas);
@@ -177,6 +184,10 @@ export default function app(_w) {
     thumbBrushStyleCtx.fillRect(...thumbParams);
   });
 
+  selectGco.addEventListener("change", (_e) => {
+    ctx.globalCompositeOperation = _e.target.value;
+  });
+
   _w.addEventListener("keydown", (_e) => {
     const val = Number(inputLineWidth.value);
     if (_e.keyCode === 219) {
@@ -187,11 +198,6 @@ export default function app(_w) {
     }
     inputLineWidth.dispatchEvent(new Event("change"));
   });
-
-  selectGco.addEventListener("change", (_e) => {
-    ctx.globalCompositeOperation = _e.target.value;
-  });
-
   // Go go go!
   initForm();
   initCanvas(canvas);
