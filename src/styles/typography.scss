@@ -1,14 +1,28 @@
-@import url("https://fonts.googleapis.com/css2?family=Cabin:ital,wght@0,400..700;1,400..700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Baloo+2:wght@400..800&family=Monoton&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Monoton&display=swap");
 
-@mixin cabin($weight) {
-  font-family: "Cabin", sans-serif;
+@mixin baloo2($weight) {
+  font-family: "Baloo 2", sans-serif;
   font-optical-sizing: auto;
   font-weight: $weight;
   font-style: normal;
-  font-variation-settings: "wdth" 100;
+}
+
+@mixin monoton-regular() {
+  font-family: "Monoton", sans-serif;
+  font-weight: 400;
+  font-style: normal;
 }
 
 body {
-  @include cabin(100);
+  @include baloo2(100);
   color: #282626;
+}
+
+h1 {
+  display: block;
+  margin: 0;
+  @include monoton-regular();
+  font-size: 4.5em;
+  color: #2dd7c3;
 }
