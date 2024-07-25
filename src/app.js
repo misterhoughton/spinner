@@ -133,9 +133,9 @@ export default function app(_w) {
         ctx.save();
         ctx.fillStyle = "aliceblue";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.restore();
         image.onload = () => {
           ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+          ctx.restore();
         };
       });
     }

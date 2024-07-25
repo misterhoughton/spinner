@@ -1,7 +1,9 @@
-import { rotatePoint, degreesToRadians } from "./utilities";
+import { rotatePoint, polyCircToIncirc } from "./utilities";
 
 export const brushPatterns = {
+  // noisePattern,
   defaultPattern,
+  cubePattern,
   crossPattern,
   chequerPattern,
   stripesNWPattern,
@@ -17,6 +19,41 @@ function defaultPattern(size, col) {
   const ctx = canvas.getContext("2d");
   ctx.fillStyle = col;
   ctx.fillRect(0, 0, size, size);
+  return ctx.createPattern(canvas, "repeat");
+}
+
+function noisePattern(size, col) {
+  const canvas = new OffscreenCanvas(size, size);
+  const ctx = canvas.getContext("2d");
+  return ctx.createPattern(canvas, "repeat");
+}
+
+function cubePattern(size, col) {
+  const gridRows = 8;
+  const gridSize = Math.floor(size / gridRows);
+  const actualSize = gridRows * gridSize;
+  const canvas = new OffscreenCanvas(actualSize, actualSize);
+  const ctx = canvas.getContext("2d");
+  const sides = 6;
+  const c = actualSize / 2;
+  const r = polyCircToIncirc(gridSize * 6);
+  const origin = c + r;
+  ctx.beginPath();
+
+  ctx.moveTo(c, origin);
+
+  for (let i = 1; i < sides + 1; i++) {
+    const p = rotatePoint(c, c, c, origin, i * (360 / sides));
+    ctx.lineTo(p.x, p.y);
+    if (i % 2 === 0) {
+      ctx.lineTo(c, c);
+      ctx.moveTo(p.x, p.y);
+    }
+  }
+
+  ctx.closePath();
+  ctx.strokeStyle = col;
+  ctx.stroke();
   return ctx.createPattern(canvas, "repeat");
 }
 
