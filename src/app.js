@@ -37,6 +37,7 @@ export default function app(_w) {
       optionEl.innerHTML = bp;
       selectBrushPattern.appendChild(optionEl);
     }
+    setBrushPatternThumbnail();
   };
 
   const initCanvas = (_canvas) => {
@@ -161,6 +162,7 @@ export default function app(_w) {
     for (let h of headings) {
       h.style.color = _e.target.value;
     }
+    setBrushPatternThumbnail();
   });
 
   inputLineWidth.addEventListener("change", (_e) => {
@@ -174,14 +176,7 @@ export default function app(_w) {
   });
 
   selectBrushPattern.addEventListener("change", (_e) => {
-    const thumbBrushStyleCtx = thumbBrushStyle.getContext("2d");
-    const thumbParams = [0, 0, thumbBrushStyle.width, thumbBrushStyle.height];
-    thumbBrushStyleCtx.clearRect(...thumbParams);
-    thumbBrushStyleCtx.fillStyle = brushPatterns[_e.target.value](
-      thumbBrushStyle.width,
-      inputCol.value
-    );
-    thumbBrushStyleCtx.fillRect(...thumbParams);
+    setBrushPatternThumbnail();
   });
 
   selectGco.addEventListener("change", (_e) => {
@@ -204,4 +199,15 @@ export default function app(_w) {
   resetLine(ctx);
   setCursor(Number(inputLineWidth.value), canvas);
   new DrawingTool(canvas, drawStart, draw, drawEnd);
+
+  function setBrushPatternThumbnail() {
+    const thumbBrushStyleCtx = thumbBrushStyle.getContext("2d");
+    const thumbParams = [0, 0, thumbBrushStyle.width, thumbBrushStyle.height];
+    thumbBrushStyleCtx.clearRect(...thumbParams);
+    thumbBrushStyleCtx.fillStyle = brushPatterns[selectBrushPattern.value](
+      thumbBrushStyle.width,
+      inputCol.value
+    );
+    thumbBrushStyleCtx.fillRect(...thumbParams);
+  }
 }
