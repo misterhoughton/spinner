@@ -114,14 +114,23 @@ export default function app(_w) {
 
   btnGetImage.addEventListener("click", (e) => {
     e.preventDefault();
+    const wrapperEl = _w.document.createElement("div");
     const newImgEl = _w.document.createElement("img");
+    const btnDelete = _w.document.createElement("button");
+    btnDelete.innerHTML = "Delete";
+    btnDelete.classList.add("btn-delete");
+    wrapperEl.classList.add("gallery-item");
     newImgEl.src = canvas.toDataURL();
 
     newImgEl.addEventListener("click", (_e) => {
       ctx.drawImage(newImgEl, 0, 0, canvas.width, canvas.height);
     });
-
-    gallery.appendChild(newImgEl);
+    btnDelete.addEventListener("click", (_e) => {
+      wrapperEl.remove();
+      // TODO: Remove the listeners!
+    });
+    wrapperEl.append(newImgEl, btnDelete);
+    gallery.appendChild(wrapperEl);
   });
 
   btnResetCanvas.addEventListener("click", (_e) => {
@@ -193,6 +202,7 @@ export default function app(_w) {
     }
     inputLineWidth.dispatchEvent(new Event("change"));
   });
+
   // Go go go!
   initForm();
   initCanvas(canvas);

@@ -4,6 +4,8 @@ fieldset {
   padding: 1em 1.5em 1.5em;
   border: 1px solid $formColour;
   border-radius: 3px;
+  box-shadow: 0 0 50px #dbd4cfb3;
+
   legend {
     font-size: 1.3em;
     color: $formColour;
@@ -26,7 +28,6 @@ fieldset {
       margin-right: 1em;
     }
   }
-  box-shadow: 0 0 50px #dbd4cfb3;
 }
 
 input[type="color"] {

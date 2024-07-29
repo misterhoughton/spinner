@@ -5,15 +5,24 @@
   column-gap: 10px;
   row-gap: 10px;
   margin-top: 2rem;
-}
 
-#gallery > img {
-  width: 30%;
-  height: 30%;
-  background-color: aliceblue;
-  border-radius: 50%;
-  cursor: pointer;
-  &:hover {
-    outline: 10px solid #fff;
+  .gallery-item {
+    position: relative;
+    width: 20%;
+    height: 20%;
+    img {
+      width: 100%;
+      background-color: aliceblue;
+      border-radius: 50%;
+      cursor: pointer;
+      &:hover {
+        outline: 10px solid #fff;
+      }
+    }
+  }
+  .btn-delete {
+    position: absolute;
+    top: 0;
+    right: 0;
   }
 }
