@@ -1,5 +1,4 @@
 // Geometry
-
 export function degreesToRadians(degrees) {
   return degrees * (Math.PI / 180);
 }
@@ -21,13 +20,12 @@ export function polyCircToIncirc(circ) {
 }
 
 // Data wrangling
-
-export async function blobToDataURL(_blob) {
+export async function blobToDataURL(blob) {
   return new Promise((res, _) => {
     const fr = new FileReader();
     fr.onload = (e) => {
       res(e.target.result);
     };
-    fr.readAsDataURL(_blob);
+    fr.readAsDataURL(blob);
   });
 }

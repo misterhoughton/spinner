@@ -5,6 +5,8 @@ import { brushPatterns } from "./brushPatterns";
 import { GCO } from "./globalCompositeOperations";
 import { blobToDataURL } from "./utilities";
 import { UndoManager } from "./UndoManager";
+import BrushService from "./services/brush.service";
+import UndoService from "./services/undo.service";
 
 export default function app(_w) {
   const canvas = _w.document.getElementById("canvas");
@@ -47,9 +49,7 @@ export default function app(_w) {
   };
 
   const resetLine = (_ctx) => {
-    _ctx.lineCap = "round";
-    _ctx.lineJoin = "round";
-    ctx.lineWidth = inputLineWidth.value;
+    setStrokeStyle();
   };
 
   const _draw = (_ctx, x, y) => {
@@ -86,12 +86,9 @@ export default function app(_w) {
   };
 
   const drawStart = (_e) => {
-    canvas.toBlob((b) => undoManager.addToStack(b));
-
-    ctx.strokeStyle = brushPatterns[selectBrushPattern.value](
-      inputLineWidth.value,
-      inputCol.value
-    );
+    canvas.toBlob((b) => {
+      undoManager.addToStack(b);
+    });
     ctx.beginPath();
     holdLine(_e);
   };
@@ -110,6 +107,24 @@ export default function app(_w) {
   const drawEnd = (_e) => {
     ctx.closePath();
     transformationService.tickFns.clear();
+  };
+
+  const setStrokeStyle = () => {
+    const strokeStyle = brushPatterns[selectBrushPattern.value](
+      inputLineWidth.value,
+      inputCol.value
+    );
+    const lineWidth = inputLineWidth.value;
+
+    ctx.lineCap = "round";
+    BrushService.lineCap = "round";
+    ctx.lineJoin = "round";
+    BrushService.lineJoin = "round";
+
+    BrushService.lineWidth = lineWidth;
+    BrushService.strokeStyle = strokeStyle;
+    ctx.lineWidth = lineWidth;
+    ctx.strokeStyle = strokeStyle;
   };
 
   btnGetImage.addEventListener("click", (e) => {
@@ -142,6 +157,8 @@ export default function app(_w) {
   btnUndo.addEventListener("click", (_e) => {
     _e.preventDefault();
 
+    UndoService.undo();
+
     if (undoManager.length) {
       const b = undoManager.pop();
       blobToDataURL(b).then((dataUrl) => {
@@ -160,6 +177,7 @@ export default function app(_w) {
 
   inputSpinSpeed.addEventListener("change", (_e) => {
     transformationService.rotationIncrement = _e.target.value * 0.025;
+    BrushService.rotationIncrement = _e.target.value * 0.025;
   });
 
   inputBlur.addEventListener("change", (_e) => {
@@ -171,11 +189,12 @@ export default function app(_w) {
     for (let h of headings) {
       h.style.color = _e.target.value;
     }
+    setStrokeStyle();
     setBrushPatternThumbnail();
   });
 
   inputLineWidth.addEventListener("change", (_e) => {
-    ctx.lineWidth = _e.target.value;
+    setStrokeStyle();
     setCursor(Number(_e.target.value), canvas);
   });
 
@@ -185,6 +204,7 @@ export default function app(_w) {
   });
 
   selectBrushPattern.addEventListener("change", (_e) => {
+    setStrokeStyle();
     setBrushPatternThumbnail();
   });
 

@@ -2,6 +2,7 @@ import { rotatePoint, polyCircToIncirc } from "./utilities";
 
 export const brushPatterns = {
   // noisePattern,
+  // atomiumPattern,
   defaultPattern,
   cubePattern,
   crossPattern,
@@ -25,6 +26,21 @@ function defaultPattern(size, col) {
 function noisePattern(size, col) {
   const canvas = new OffscreenCanvas(size, size);
   const ctx = canvas.getContext("2d");
+  return ctx.createPattern(canvas, "repeat");
+}
+
+function atomiumPattern(size, col) {
+  const gridRows = 8;
+  const gridSize = Math.floor(size / gridRows);
+  const actualSize = gridRows * gridSize;
+  const canvas = new OffscreenCanvas(actualSize, actualSize);
+  const ctx = canvas.getContext("2d");
+
+  for (let i = 0; i < gridRows; i++) {}
+
+  ctx.closePath();
+  ctx.strokeStyle = col;
+  ctx.stroke();
   return ctx.createPattern(canvas, "repeat");
 }
 
@@ -140,6 +156,15 @@ function drawDiagonalStripes(ctx, stripeCount, stripeWidth, size) {
   }
 }
 
+function drawGrid(ctx, gridRows, gridSize, size) {
+  for (let i = 0; i < gridRows; i++) {
+    ctx.moveTo(i * gridSize, 0);
+    ctx.lineTo(i * gridSize, size);
+    ctx.moveTo(0, i * gridSize);
+    ctx.lineTo(size, i * gridSize);
+  }
+}
+
 function gridPattern(size, col) {
   const gridRows = 3;
   const gridSize = Math.floor(size / gridRows);
@@ -149,12 +174,7 @@ function gridPattern(size, col) {
 
   ctx.translate(0.5, 0.5);
   ctx.beginPath();
-  for (let i = 0; i < gridRows; i++) {
-    ctx.moveTo(i * gridSize, 0);
-    ctx.lineTo(i * gridSize, actualSize);
-    ctx.moveTo(0, i * gridSize);
-    ctx.lineTo(actualSize, i * gridSize);
-  }
+  drawGrid(ctx, gridRows, gridSize, actualSize);
 
   ctx.closePath();
   ctx.strokeStyle = col;
