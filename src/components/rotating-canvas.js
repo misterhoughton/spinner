@@ -2,11 +2,12 @@ import { LitElement, html, css } from "lit-element";
 import { customElement } from "lit/decorators";
 import { ref } from "lit/directives/ref.js";
 
-import { blobToDataURL, rotatePoint } from "../utilities";
+import { rotatePoint } from "../utilities";
 import { DrawingTool } from "../DrawingTool";
 import { setCursor } from "../setCursor";
 import BrushService from "../services/brush.service";
 import UndoService from "../services/undo.service";
+import BackgroundService from "../services/background.service";
 
 @customElement("rotating-canvas")
 class RotatingCanvas extends LitElement {
@@ -17,11 +18,13 @@ class RotatingCanvas extends LitElement {
   #requestID;
   fps = 1000 / 200;
   rotationIncrement = 0;
-
   canvas;
   context2d;
 
   static styles = css`
+    :host {
+      display: block;
+    }
     canvas {
       border-radius: 50%;
     }
@@ -31,6 +34,8 @@ class RotatingCanvas extends LitElement {
     return {
       width: {},
       height: {},
+      colourBg: { attribute: "colour-bg" },
+      colourFg: { attribute: "colour-fg" },
     };
   }
 
@@ -67,8 +72,10 @@ class RotatingCanvas extends LitElement {
       e.offsetX = touch.clientX - touch.target.offsetLeft;
       e.offsetY = touch.clientY - touch.target.offsetTop;
     }
+    const x = e.clientX - e.target.offsetLeft;
+    const y = e.clientY - e.target.offsetTop;
     this.#callbacks.clear();
-    this.#drawLine(e.offsetX, e.offsetY);
+    this.#drawTransformed(x, y);
     this.#holdLine(e);
   }
 
@@ -78,7 +85,7 @@ class RotatingCanvas extends LitElement {
   };
 
   #drawStart(e) {
-    this.canvas.toBlob((b) => UndoService.addToStack(b));
+    UndoService.addToStack(this.canvas.toDataURL());
     this.context2d.beginPath();
     this.#holdLine(e);
   }
@@ -86,15 +93,16 @@ class RotatingCanvas extends LitElement {
   #drawEnd = (e) => {
     this.context2d.closePath();
     this.#callbacks.clear();
+    UndoService.thumbnail = this.canvas.toDataURL();
   };
 
-  #holdLine(e) {
-    const drawTransformed = (x, y) => {
-      const tc = this.#getRotatedCoords(x, y);
-      this.#drawLine(tc.x, tc.y);
-    };
+  #drawTransformed(x, y) {
+    const tc = this.#getRotatedCoords(x, y);
+    this.#drawLine(tc.x, tc.y);
+  }
 
-    const isHolding = (e) => {
+  #holdLine(e) {
+    const mouseIsStatic = (e) => {
       return e.movementX + e.movementY === 0;
     };
     const touch = e.touches ? e.touches.item(0) : null;
@@ -107,8 +115,11 @@ class RotatingCanvas extends LitElement {
       e.layerY = touch.clientY - touch.target.offsetTop;
     }
 
-    if (isHolding(e)) {
-      this.#callbacks.add(() => drawTransformed(e.offsetX, e.offsetY));
+    if (mouseIsStatic(e)) {
+      // Only add callback if position has changed?
+      const x = e.clientX - e.target.offsetLeft;
+      const y = e.clientY - e.target.offsetTop;
+      this.#callbacks.add(() => this.#drawTransformed(x, y));
     } else {
       this.#callbacks.clear();
     }
@@ -119,22 +130,20 @@ class RotatingCanvas extends LitElement {
   }
 
   #clearCanvas() {
-    this.context2d.fillStyle = "#fff";
+    this.context2d.fillStyle = this.colourBg;
     this.context2d.fillRect(0, 0, this.width, this.height);
   }
 
-  #undo(blob) {
-    if (blob) {
-      blobToDataURL(blob).then((dataUrl) => {
-        const image = new Image(60, 45);
-        image.src = dataUrl;
-        this.context2d.save();
-        this.#clearCanvas();
-        image.onload = () => {
-          this.context2d.drawImage(image, 0, 0, this.width, this.height);
-          this.context2d.restore();
-        };
-      });
+  #undo(dataUrl) {
+    if (dataUrl) {
+      const image = new Image(60, 45);
+      image.src = dataUrl;
+      this.context2d.save();
+      this.#clearCanvas();
+      image.onload = () => {
+        this.context2d.drawImage(image, 0, 0, this.width, this.height);
+        this.context2d.restore();
+      };
     }
   }
 
@@ -184,9 +193,20 @@ class RotatingCanvas extends LitElement {
       (lineJoin) => (this.context2d.lineJoin = lineJoin)
     );
 
-    UndoService.stack.subscribe((blob) => this.#undo(blob));
+    BrushService.blendingMode.subscribe(
+      (mode) => (this.context2d.globalCompositeOperation = mode)
+    );
 
+    UndoService.$undoNotifier.subscribe((blob) => this.#undo(blob));
     this.start();
+
+    BackgroundService.$backgroundImg.subscribe((img) => {
+      const imgEl = new Image(this.width, this.height);
+      imgEl.src = img;
+      this.context2d.drawImage(imgEl, 0, 0, this.width, this.height);
+    });
+
+    BackgroundService.$onReset.subscribe(() => this.#clearCanvas());
   }
 
   render() {

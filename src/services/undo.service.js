@@ -1,20 +1,28 @@
 import { Subject } from "rxjs";
-import { UndoManager } from "../UndoManager";
+import { blobToDataURL } from "../utilities";
 
 class _UndoService {
-  #undoManager = new UndoManager();
+  #thumbnail;
   #$stack = new Subject();
-
-  get stack() {
+  #stack = [];
+  get $undoNotifier() {
     return this.#$stack.asObservable();
   }
 
   addToStack(item) {
-    this.#undoManager.addToStack(item);
+    this.#stack.push(item);
   }
 
   undo() {
-    this.#$stack.next(this.#undoManager.pop());
+    this.#$stack.next(this.#stack.pop());
+  }
+
+  set thumbnail(t) {
+    this.#thumbnail = t;
+  }
+
+  get thumbnail() {
+    return this.#thumbnail;
   }
 }
 

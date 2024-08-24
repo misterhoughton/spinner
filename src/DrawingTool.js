@@ -29,7 +29,7 @@ export class DrawingTool {
     };
     canvas.addEventListener("mousedown", _downHandler);
     canvas.addEventListener("mouseenter", _enterHandler);
-    canvas.addEventListener("touchstart", _downHandler, { passive: true });
-    canvas.addEventListener("touchend", _enterHandler, { passive: true });
+    canvas.addEventListener("touchstart", _downHandler, touchEventConfig);
+    canvas.addEventListener("touchend", _enterHandler, touchEventConfig);
   }
 }
