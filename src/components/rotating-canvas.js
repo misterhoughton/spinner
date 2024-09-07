@@ -1,5 +1,5 @@
 import { LitElement, html, css } from "lit-element";
-import { customElement } from "lit/decorators";
+import { customElement, property } from "lit/decorators";
 import { ref } from "lit/directives/ref.js";
 
 import { rotatePoint } from "../utilities";
@@ -16,7 +16,7 @@ class RotatingCanvas extends LitElement {
   #previousTimeStamp = 0;
   #callbacks = new Set();
   #requestID;
-  fps = 1000 / 200;
+  fps = 10;
   rotationIncrement = 0;
   canvas;
   context2d;
@@ -30,19 +30,19 @@ class RotatingCanvas extends LitElement {
     }
   `;
 
-  static get properties() {
-    return {
-      width: {},
-      height: {},
-      colourBg: { attribute: "colour-bg" },
-      colourFg: { attribute: "colour-fg" },
-    };
+  @property({}) width;
+  @property({}) height;
+  @property({ type: Number }) fps;
+  @property({ attribute: "colour-bg" }) colourBg;
+  @property({ type: Number, attribute: "rotation-increment" })
+  rotationIncrement;
+
+  constructor() {
+    super();
+    this.fps = 30;
   }
 
   #setRef = (_ref) => {
-    if (_ref === undefined) {
-      return;
-    }
     this.canvas = _ref;
   };
 
@@ -56,7 +56,7 @@ class RotatingCanvas extends LitElement {
     const newRotationAngle = Math.floor(
       (this.#rotationAngle + this.rotationIncrement) % 360
     );
-    if (timeStamp > this.#previousTimeStamp + this.fps) {
+    if (timeStamp > this.#previousTimeStamp + 1000 / this.fps) {
       this.#previousTimeStamp = timeStamp;
       this.#callbacks.forEach((fn) => fn());
       this.canvas.style.transform = `rotate(${this.#rotationAngle}deg)`;
@@ -130,8 +130,7 @@ class RotatingCanvas extends LitElement {
   }
 
   #clearCanvas() {
-    this.context2d.fillStyle = this.colourBg;
-    this.context2d.fillRect(0, 0, this.width, this.height);
+    this.context2d.clearRect(0, 0, this.width, this.height);
   }
 
   #undo(dataUrl) {
@@ -181,10 +180,6 @@ class RotatingCanvas extends LitElement {
       (style) => (this.context2d.strokeStyle = style)
     );
 
-    BrushService.rotationIncrement.subscribe(
-      (increment) => (this.rotationIncrement = increment)
-    );
-
     BrushService.lineCap.subscribe(
       (lineCap) => (this.context2d.lineCap = lineCap)
     );
@@ -212,6 +207,7 @@ class RotatingCanvas extends LitElement {
   render() {
     return html`
       <canvas
+        style="background-color:${this.colourBg}"
         height="${this.height}"
         width="${this.width}"
         ${ref(this.#setRef)}

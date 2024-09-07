@@ -6,7 +6,7 @@ import BackgroundService from "../services/background.service";
 class ButtonReset extends LitElement {
   render() {
     return html`<button @click="${() => BackgroundService.reset()}">
-      reset
+      clear
     </button>`;
   }
 }

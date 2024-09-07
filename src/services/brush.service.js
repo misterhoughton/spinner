@@ -6,8 +6,7 @@ class _BrushService {
   #strokeStyle = new BehaviorSubject("#2dd7c3");
   #lineCap = new BehaviorSubject("round");
   #lineJoin = new BehaviorSubject("round");
-  #lineWidth = new BehaviorSubject(1);
-  #rotationIncrement = new BehaviorSubject(0);
+  #lineWidth = new BehaviorSubject(10);
   #blendingMode = new BehaviorSubject(GCO[0]);
   #lineColour = new BehaviorSubject("#2dd7c3");
   #brushPattern = new BehaviorSubject(Object.keys(brushPatterns)[0]);
@@ -17,7 +16,10 @@ class _BrushService {
   }
   set lineColour(col) {
     this.#lineColour.next(col);
-    this.#strokeStyle.next(this.brushPattern);
+    this.strokeStyle = brushPatterns[this.#brushPattern.value](
+      this.#lineWidth.value,
+      col
+    );
   }
 
   get lineCap() {
@@ -37,33 +39,30 @@ class _BrushService {
   get lineWidth() {
     return this.#lineWidth.asObservable();
   }
-  set lineWidth(width) {
-    this.#lineWidth.next(width);
+  set lineWidth(lineWidth) {
+    this.#lineWidth.next(lineWidth);
+    this.strokeStyle = brushPatterns[this.#brushPattern.value](
+      lineWidth,
+      this.#lineColour.value
+    );
   }
 
   get strokeStyle() {
     return this.#strokeStyle.asObservable();
   }
   set strokeStyle(style) {
-    this.#strokeStyle.next(this.brushPattern);
+    this.#strokeStyle.next(style);
   }
 
   get brushPattern() {
-    return brushPatterns[this.#brushPattern.value](
-      this.#lineWidth.value,
-      this.#lineColour.value
-    );
+    return this.#brushPattern.asObservable();
   }
   set brushPattern(_brushPattern) {
     this.#brushPattern.next(_brushPattern);
-    this.#strokeStyle.next(this.brushPattern);
-  }
-
-  get rotationIncrement() {
-    return this.#rotationIncrement.asObservable();
-  }
-  set rotationIncrement(angle) {
-    this.#rotationIncrement.next(angle);
+    this.strokeStyle = brushPatterns[this.#brushPattern.value](
+      this.#lineWidth.value,
+      this.#lineColour.value
+    );
   }
 
   get blendingMode() {
