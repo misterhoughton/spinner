@@ -46,7 +46,7 @@ class InputBrushPattern extends LitElement {
   render() {
     return html`<brush-thumbnail
         height=${this.#height}
-        width=${this.#height}
+        width=${this.#width}
         pattern=${this.#brushPattern}
         colour=${this.#brushColour}
       ></brush-thumbnail>

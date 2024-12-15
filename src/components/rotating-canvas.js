@@ -137,6 +137,7 @@ class RotatingCanvas extends LitElement {
     if (dataUrl) {
       const image = new Image(60, 45);
       image.src = dataUrl;
+      UndoService.thumbnail = dataUrl;
       this.context2d.save();
       this.#clearCanvas();
       image.onload = () => {
