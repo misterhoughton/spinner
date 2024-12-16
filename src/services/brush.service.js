@@ -3,12 +3,12 @@ import { GCO } from "../GlobalCompositeOperations";
 import { brushPatterns } from "../brushPatterns";
 
 class _BrushService {
-  #strokeStyle = new BehaviorSubject("#2dd7c3");
+  #strokeStyle = new BehaviorSubject("#000");
   #lineCap = new BehaviorSubject("round");
   #lineJoin = new BehaviorSubject("round");
   #lineWidth = new BehaviorSubject(10);
   #blendingMode = new BehaviorSubject(GCO[0]);
-  #lineColour = new BehaviorSubject("#2dd7c3");
+  #lineColour = new BehaviorSubject("#000");
   #brushPattern = new BehaviorSubject(Object.keys(brushPatterns)[0]);
 
   get lineColour() {

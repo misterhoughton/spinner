@@ -32,7 +32,11 @@ class GalleryItem extends LitElement {
   }
 
   onClick() {
-    BackgroundService.setBackgroundImage(this.src);
+    this.dispatchEvent(
+      new CustomEvent("item-select", {
+        detail: this.src,
+      })
+    );
   }
 
   render() {

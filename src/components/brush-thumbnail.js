@@ -26,6 +26,8 @@ class BrushThumbnail extends LitElement {
         this.height,
         this.colour
       );
+    } else {
+      this.#ctx.fillStyle = this.colour;
     }
     this.#ctx.fillRect(...params);
   }

@@ -1,21 +1,24 @@
 import { LitElement, html } from "lit-element";
 import { map } from "lit/directives/map.js";
-import { customElement } from "lit/decorators";
-import BrushService from "../services/brush.service";
+import { customElement, property } from "lit/decorators";
 import { brushPatterns } from "../brushPatterns";
-import { combineLatest } from "rxjs";
 
 import "./brush-thumbnail";
 
 @customElement("input-brush-pattern")
 class InputBrushPattern extends LitElement {
-  #canvas;
+  static properties = {
+    colour: {},
+    pattern: {},
+    width: {},
+    height: {},
+  };
 
-  #brushPattern;
-  #brushColour;
-  #height = 50;
-  #width = 50;
-
+  constructor() {
+    super();
+    this.width = 50;
+    this.height = 50;
+  }
   get #brushPatternOptions() {
     const _brushPatterns = [];
     for (let bp in brushPatterns) {
@@ -24,21 +27,7 @@ class InputBrushPattern extends LitElement {
     return _brushPatterns;
   }
 
-  firstUpdated() {
-    super.firstUpdated();
-    combineLatest([
-      BrushService.brushPattern,
-      BrushService.lineColour,
-    ]).subscribe((res) => {
-      this.#brushPattern = res[0];
-      this.#brushColour = res[1];
-      this.requestUpdate();
-    });
-  }
-
   onChange(e) {
-    this.#brushPattern = e.target.value;
-    this.requestUpdate();
     this.dispatchEvent(
       new CustomEvent("pattern-change", { detail: e.target.value })
     );
@@ -46,10 +35,10 @@ class InputBrushPattern extends LitElement {
 
   render() {
     return html`<brush-thumbnail
-        height=${this.#height}
-        width=${this.#width}
-        pattern=${this.#brushPattern}
-        colour=${this.#brushColour}
+        height=${this.height}
+        width=${this.width}
+        pattern=${this.pattern}
+        colour=${this.colour}
       ></brush-thumbnail>
       <select @change=${this.onChange}>
         ${map(this.#brushPatternOptions, (bp) => bp)}

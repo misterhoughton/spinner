@@ -31,13 +31,26 @@ class SpinnerGallery extends LitElement {
       target: {},
     };
   }
+
+  onGalleryItemSelect(e) {
+    this.dispatchEvent(
+      new CustomEvent("gallery-item-select", {
+        detail: e.detail,
+      })
+    );
+  }
+
   render() {
     const itemTemplates = [];
     if (this.items) {
       for (const i of this.items) {
         itemTemplates.push(
           html`<li>
-            <gallery-item src="${i}" target="${this.target}"></gallery-item>
+            <gallery-item
+              src="${i}"
+              target="${this.target}"
+              @item-select=${this.onGalleryItemSelect}
+            ></gallery-item>
           </li>`
         );
       }

@@ -37,6 +37,7 @@ class MainApp extends LitElement {
   @state({ type: Array }) galleryItems;
   @state({ type: Number }) rotationIncrement;
   @state() brushColour;
+  @state() brushPattern;
 
   constructor() {
     super();
@@ -49,10 +50,19 @@ class MainApp extends LitElement {
   onColourChange(e) {
     this.brushColour = e.detail;
     BrushService.lineColour = e.detail;
+    this.requestUpdate(); // Or this
   }
 
-  onBrushChange(e) {
+  onPatternChange(e) {
+    this.brushPattern = e.detail;
     BrushService.brushPattern = e.detail;
+    this.requestUpdate(); // etc...
+  }
+
+  onSpinSpeedChange(e) {
+    TransformationService.rotationIncrement = e.detail;
+    this.rotationIncrement = e.detail;
+    this.requestUpdate();
   }
 
   onLineWidthChange(e) {
@@ -65,12 +75,6 @@ class MainApp extends LitElement {
 
   onLineJoinChange(e) {
     BrushService.lineJoin = e.detail;
-  }
-
-  onSpinSpeedChange(e) {
-    TransformationService.rotationIncrement = e.detail;
-    this.rotationIncrement = e.detail;
-    this.requestUpdate(); // Not sure why we need this
   }
 
   onGcoChange(e) {
@@ -89,13 +93,19 @@ class MainApp extends LitElement {
     BackgroundService.reset();
   }
 
+  onGalleryItemSelect(e) {
+    BackgroundService.setBackgroundImage(e.detail);
+  }
+
   render() {
     return html`
       <div class="container">
         <div class="left">
           <input-colour @colour-change=${this.onColourChange}></input-colour>
           <input-brush-pattern
-            @pattern-change=${this.onBrushChange}
+            pattern=${this.brushPattern}
+            colour=${this.brushColour}
+            @pattern-change=${this.onPatternChange}
           ></input-brush-pattern>
           <Input-line-width
             @line-width-change=${this.onLineWidthChange}
@@ -115,7 +125,10 @@ class MainApp extends LitElement {
             @add-to-gallery=${this.onAddToGallery}
           ></button-add-to-gallery>
           <button-reset @reset=${this.onReset}></button-reset>
-          <spinner-gallery items=${this.galleryItems}></spinner-gallery>
+          <spinner-gallery
+            items=${this.galleryItems}
+            @gallery-item-select=${this.onGalleryItemSelect}
+          ></spinner-gallery>
         </div>
         <main>
           <rotating-canvas
@@ -123,6 +136,8 @@ class MainApp extends LitElement {
             height="500"
             colour-bg="#fff"
             fps="120"
+            colour-fg=${this.lineColour}
+            brush-pattern=${this.brushPattern}
             rotation-increment=${this.rotationIncrement}
           ></rotating-canvas>
         </main>

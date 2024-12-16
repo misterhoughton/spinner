@@ -34,6 +34,8 @@ class RotatingCanvas extends LitElement {
   @property({}) height;
   @property({ type: Number }) fps;
   @property({ attribute: "colour-bg" }) colourBg;
+  @property({ attribute: "colour-fg" }) colourFg;
+  @property({ attribute: "brush-pattern" }) brushPattern;
   @property({ type: Number, attribute: "rotation-increment" })
   rotationIncrement;
 
