@@ -1,6 +1,6 @@
 import { LitElement, html } from "lit-element";
 import { ref } from "lit/directives/ref.js";
-import { customElement, property } from "lit/decorators";
+import { customElement } from "lit/decorators";
 import { brushPatterns } from "../brushPatterns";
 
 @customElement("brush-thumbnail")

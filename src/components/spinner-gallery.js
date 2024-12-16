@@ -1,6 +1,6 @@
 import { LitElement, html, css } from "lit-element";
 import { customElement } from "lit/decorators";
-import GalleryItem from "./gallery-item";
+import "./gallery-item";
 
 @customElement("spinner-gallery")
 class SpinnerGallery extends LitElement {
