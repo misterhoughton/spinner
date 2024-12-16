@@ -3,12 +3,6 @@ import { customElement } from "lit/decorators";
 
 @customElement("input-line-cap")
 class InputLineCap extends LitElement {
-  static get properties() {
-    return {
-      items: {},
-    };
-  }
-
   onChange(e) {
     this.dispatchEvent(
       new CustomEvent("line-cap-change", {

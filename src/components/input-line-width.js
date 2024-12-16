@@ -16,6 +16,7 @@ class InputLineWidth extends LitElement {
       }
     });
   }
+
   emit(lineWidth) {
     this.dispatchEvent(
       new CustomEvent("line-width-change", { detail: lineWidth })
