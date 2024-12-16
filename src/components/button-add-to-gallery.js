@@ -7,6 +7,6 @@ class ButtonAddToGallery extends LitElement {
     this.dispatchEvent(new CustomEvent("add-to-gallery"));
   }
   render() {
-    return html`<button @click="${this.onClick}">add to gallery</button>`;
+    return html`<button @click="${this.onClick}">Add to gallery</button>`;
   }
 }

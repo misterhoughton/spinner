@@ -1,7 +1,6 @@
 import { LitElement, html } from "lit-element";
 import { map } from "lit/directives/map.js";
-import { ref } from "lit/directives/ref.js";
-import { customElement, property, state } from "lit/decorators";
+import { customElement } from "lit/decorators";
 import BrushService from "../services/brush.service";
 import { brushPatterns } from "../brushPatterns";
 import { combineLatest } from "rxjs";
