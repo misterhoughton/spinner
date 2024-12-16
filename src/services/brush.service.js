@@ -2,14 +2,23 @@ import { BehaviorSubject } from "rxjs";
 import { GCO } from "../GlobalCompositeOperations";
 import { brushPatterns } from "../brushPatterns";
 
+const defaults = {
+  col: "#000",
+  cap: "round",
+  join: "round",
+  width: 10,
+  blendMode: GCO[0],
+  pattern: Object.keys(brushPatterns)[0],
+};
+
 class _BrushService {
-  #strokeStyle = new BehaviorSubject("#000");
-  #lineCap = new BehaviorSubject("round");
-  #lineJoin = new BehaviorSubject("round");
-  #lineWidth = new BehaviorSubject(10);
-  #blendingMode = new BehaviorSubject(GCO[0]);
-  #lineColour = new BehaviorSubject("#000");
-  #brushPattern = new BehaviorSubject(Object.keys(brushPatterns)[0]);
+  #strokeStyle = new BehaviorSubject(defaults.col);
+  #lineCap = new BehaviorSubject(defaults.cap);
+  #lineJoin = new BehaviorSubject(defaults.join);
+  #lineWidth = new BehaviorSubject(defaults.width);
+  #blendingMode = new BehaviorSubject(defaults.blendMode);
+  #lineColour = new BehaviorSubject(defaults.col);
+  #brushPattern = new BehaviorSubject(defaults.pattern);
 
   get lineColour() {
     return this.#lineColour.asObservable();
