@@ -1,9 +1,8 @@
 import { LitElement, html, css } from "lit-element";
-import { customElement, state } from "lit/decorators";
+import { customElement } from "lit/decorators";
 import GalleryService from "../services/gallery.service";
 import BrushService from "../services/brush.service";
 import BackgroundService from "../services/background.service";
-import TransformationService from "../services/transformation.service";
 import UndoService from "../services/undo.service";
 
 import "./input-colour";
@@ -34,35 +33,35 @@ class MainApp extends LitElement {
       margin-right: 2em;
     }
   `;
-  @state({ type: Array }) galleryItems;
-  @state({ type: Number }) rotationIncrement;
-  @state() brushColour;
-  @state() brushPattern;
+
+  static get properties() {
+    return {
+      galleryItems: { type: Array },
+      rotationIncrement: { type: Number },
+      brushColour: {},
+      brushPattern: {},
+    };
+  }
 
   constructor() {
     super();
     GalleryService.$images.subscribe((i) => {
       this.galleryItems = JSON.stringify(i);
-      this.requestUpdate(); // Not sure why we need this
     });
   }
 
   onColourChange(e) {
     this.brushColour = e.detail;
     BrushService.lineColour = e.detail;
-    this.requestUpdate(); // Or this
   }
 
   onPatternChange(e) {
     this.brushPattern = e.detail;
     BrushService.brushPattern = e.detail;
-    this.requestUpdate(); // etc...
   }
 
   onSpinSpeedChange(e) {
-    TransformationService.rotationIncrement = e.detail;
     this.rotationIncrement = e.detail;
-    this.requestUpdate();
   }
 
   onLineWidthChange(e) {

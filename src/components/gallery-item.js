@@ -1,6 +1,6 @@
 import { LitElement, html, css } from "lit-element";
 import { customElement } from "lit/decorators";
-import BackgroundService from "../services/background.service";
+import { property, property } from "lit/decorators.js";
 
 @customElement("gallery-item")
 class GalleryItem extends LitElement {
@@ -25,11 +25,7 @@ class GalleryItem extends LitElement {
       }
     `;
   }
-  static get properties() {
-    return {
-      src: {},
-    };
-  }
+  @property() src;
 
   onClick() {
     this.dispatchEvent(
