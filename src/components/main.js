@@ -40,6 +40,7 @@ class MainApp extends LitElement {
       rotationIncrement: { type: Number },
       brushColour: {},
       brushPattern: {},
+      thumbnail: {},
     };
   }
 
@@ -85,7 +86,7 @@ class MainApp extends LitElement {
   }
 
   onAddToGallery() {
-    GalleryService.addImage(UndoService.thumbnail);
+    GalleryService.addImage(this.thumbnail);
   }
 
   onReset() {
@@ -94,6 +95,10 @@ class MainApp extends LitElement {
 
   onGalleryItemSelect(e) {
     BackgroundService.setBackgroundImage(e.detail);
+  }
+
+  onCanvasUpdated(e) {
+    this.thumbnail = e.detail;
   }
 
   render() {
@@ -138,6 +143,7 @@ class MainApp extends LitElement {
             colour-fg=${this.lineColour}
             brush-pattern=${this.brushPattern}
             rotation-increment=${this.rotationIncrement}
+            @canvas-updated=${this.onCanvasUpdated}
           ></rotating-canvas>
         </main>
       </div>

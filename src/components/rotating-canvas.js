@@ -92,10 +92,10 @@ class RotatingCanvas extends LitElement {
     this.#holdLine(e);
   }
 
-  #drawEnd = (e) => {
+  #drawEnd = () => {
     this.context2d.closePath();
     this.#callbacks.clear();
-    UndoService.thumbnail = this.canvas.toDataURL();
+    this.#emitChangeEvent(this.canvas.toDataURL());
   };
 
   #drawTransformed(x, y) {
@@ -139,7 +139,7 @@ class RotatingCanvas extends LitElement {
     if (dataUrl) {
       const image = new Image(60, 45);
       image.src = dataUrl;
-      UndoService.thumbnail = dataUrl;
+      this.#emitChangeEvent(dataUrl);
       this.context2d.save();
       this.#clearCanvas();
       image.onload = () => {
@@ -147,6 +147,10 @@ class RotatingCanvas extends LitElement {
         this.context2d.restore();
       };
     }
+  }
+
+  #emitChangeEvent(dataUrl) {
+    this.dispatchEvent(new CustomEvent("canvas-updated", { detail: dataUrl }));
   }
 
   start() {
