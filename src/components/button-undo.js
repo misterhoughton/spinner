@@ -4,7 +4,10 @@ import UndoService from "../services/undo.service";
 
 @customElement("button-undo")
 class ButtonUndo extends LitElement {
+  onClick() {
+    this.dispatchEvent(new CustomEvent("undo"));
+  }
   render() {
-    return html`<button @click="${() => UndoService.undo()}">undo</button>`;
+    return html`<button @click=${this.onClick}>undo</button>`;
   }
 }

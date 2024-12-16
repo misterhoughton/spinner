@@ -38,9 +38,11 @@ class InputBrushPattern extends LitElement {
   }
 
   onChange(e) {
-    BrushService.brushPattern = e.target.value;
     this.#brushPattern = e.target.value;
     this.requestUpdate();
+    this.dispatchEvent(
+      new CustomEvent("pattern-change", { detail: e.target.value })
+    );
   }
 
   render() {

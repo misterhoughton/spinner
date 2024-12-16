@@ -6,6 +6,11 @@ import BrushService from "../services/brush.service";
 
 @customElement("select-gco")
 class SelectGCO extends LitElement {
+  onChange(e) {
+    this.dispatchEvent(
+      new CustomEvent("gco-change", { detail: e.target.value })
+    );
+  }
   render() {
     return html`<select
       @change="${(e) => (BrushService.blendingMode = e.target.value)}"

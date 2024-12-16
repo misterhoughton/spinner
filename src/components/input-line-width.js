@@ -7,14 +7,19 @@ class InputLineWidth extends LitElement {
   @property({ type: Number }) value;
   constructor() {
     super();
-    window.addEventListener("keydown", (_e) => {
-      if (_e.code === "BracketLeft") {
-        BrushService.lineWidth = this.value - 5;
+    window.addEventListener("keydown", (e) => {
+      if (e.code === "BracketLeft") {
+        this.emit(this.value - 5);
       }
-      if (_e.code === "BracketRight") {
-        BrushService.lineWidth = this.value + 5;
+      if (e.code === "BracketRight") {
+        this.emit(this.value + 5);
       }
     });
+  }
+  emit(lineWidth) {
+    this.dispatchEvent(
+      new CustomEvent("line-width-change", { detail: lineWidth })
+    );
   }
 
   connectedCallback() {
@@ -24,11 +29,12 @@ class InputLineWidth extends LitElement {
       this.requestUpdate();
     });
   }
+
   render() {
     return html`<input
       type="range"
       value=${this.value}
-      @change="${(e) => (BrushService.lineWidth = e.target.value)}"
+      @change="${(e) => this.emit(e.target.value)}"
     />`;
   }
 }

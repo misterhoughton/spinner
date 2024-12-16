@@ -1,8 +1,11 @@
 import { LitElement, html, css } from "lit-element";
-import { customElement, state, property } from "lit/decorators";
+import { customElement, state } from "lit/decorators";
 import GalleryService from "../services/gallery.service";
+import BrushService from "../services/brush.service";
+import BackgroundService from "../services/background.service";
+import TransformationService from "../services/transformation.service";
+import UndoService from "../services/undo.service";
 
-import "./input-brush-colour";
 import "./input-colour";
 import "./input-line-width";
 import "./input-line-cap";
@@ -15,7 +18,6 @@ import "./button-undo";
 import "./button-reset";
 import "./button-add-to-gallery";
 import "./select-gco";
-import TransformationService from "../services/transformation.service";
 
 @customElement("main-app")
 class MainApp extends LitElement {
@@ -34,6 +36,7 @@ class MainApp extends LitElement {
   `;
   @state({ type: Array }) galleryItems;
   @state({ type: Number }) rotationIncrement;
+  @state() brushColour;
 
   constructor() {
     super();
@@ -41,26 +44,77 @@ class MainApp extends LitElement {
       this.galleryItems = JSON.stringify(i);
       this.requestUpdate(); // Not sure why we need this
     });
-    TransformationService.rotationIncrement.subscribe((ri) => {
-      this.rotationIncrement = ri;
-      this.requestUpdate(); // Not sure why we need this
-    });
+  }
+
+  onColourChange(e) {
+    this.brushColour = e.detail;
+    BrushService.lineColour = e.detail;
+  }
+
+  onBrushChange(e) {
+    BrushService.brushPattern = e.detail;
+  }
+
+  onLineWidthChange(e) {
+    BrushService.lineWidth = e.detail;
+  }
+
+  onLineCapChange(e) {
+    BrushService.lineCap = e.detail;
+  }
+
+  onLineJoinChange(e) {
+    BrushService.lineJoin = e.detail;
+  }
+
+  onSpinSpeedChange(e) {
+    TransformationService.rotationIncrement = e.detail;
+    this.rotationIncrement = e.detail;
+    this.requestUpdate(); // Not sure why we need this
+  }
+
+  onGcoChange(e) {
+    BrushService.blendingMode = e.detail;
+  }
+
+  onUndoClick() {
+    UndoService.undo();
+  }
+
+  onAddToGallery() {
+    GalleryService.addImage(UndoService.thumbnail);
+  }
+
+  onReset() {
+    BackgroundService.reset();
   }
 
   render() {
     return html`
       <div class="container">
         <div class="left">
-          <input-colour></input-colour>
-          <input-brush-pattern></input-brush-pattern>
-          <!-- <input-brush-colour></input-brush-colour> -->
-          <Input-line-width></Input-line-width>
-          <input-line-cap></input-line-cap><input-line-join></input-line-join>
-          <select-gco></select-gco>
-          <input-spin-speed></input-spin-speed>
-          <button-undo></button-undo>
-          <button-add-to-gallery></button-add-to-gallery>
-          <button-reset></button-reset>
+          <input-colour @colour-change=${this.onColourChange}></input-colour>
+          <input-brush-pattern
+            @pattern-change=${this.onBrushChange}
+          ></input-brush-pattern>
+          <Input-line-width
+            @line-width-change=${this.onLineWidthChange}
+          ></Input-line-width>
+          <input-line-cap
+            @line-cap-change=${this.onLineCapChange}
+          ></input-line-cap
+          ><input-line-join
+            @line-join-change=${this.onLineJoinChange}
+          ></input-line-join>
+          <select-gco @gco-change=${this.onGcoChange}></select-gco>
+          <input-spin-speed
+            @spin-speed-change=${this.onSpinSpeedChange}
+          ></input-spin-speed>
+          <button-undo @undo=${this.onUndoClick}></button-undo>
+          <button-add-to-gallery
+            @add-to-gallery=${this.onAddToGallery}
+          ></button-add-to-gallery>
+          <button-reset @reset=${this.onReset}></button-reset>
           <spinner-gallery items=${this.galleryItems}></spinner-gallery>
         </div>
         <main>

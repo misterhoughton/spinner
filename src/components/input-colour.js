@@ -11,7 +11,6 @@ import {
   easeInOutSine,
   easeInOutQuint,
 } from "easing-utils";
-import BrushService from "../services/brush.service";
 
 function lerp(a, b, alpha) {
   return a + alpha * (b - a);
@@ -129,8 +128,16 @@ class InputColour extends LitElement {
 
   onClick(e) {
     const col = this.pick(e);
-    BrushService.lineColour = col;
+    this.emitColourChange(col);
     this.addToRecent(col);
+  }
+
+  emitColourChange(col) {
+    this.dispatchEvent(
+      new CustomEvent("colour-change", {
+        detail: col,
+      })
+    );
   }
 
   render() {
@@ -147,7 +154,7 @@ class InputColour extends LitElement {
             html`<div
               class="palette-item"
               style="background-color: ${c}"
-              @click=${() => (BrushService.lineColour = c)}
+              @click=${() => this.emitColourChange(c)}
             ></div>`
         )}
       </div> `;

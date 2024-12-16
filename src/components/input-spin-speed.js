@@ -4,11 +4,12 @@ import TransformationService from "../services/transformation.service";
 
 @customElement("input-spin-speed")
 class InputSpinSpeed extends LitElement {
+  onChange(e) {
+    this.dispatchEvent(
+      new CustomEvent("spin-speed-change", { detail: e.target.value * 0.075 })
+    );
+  }
   render() {
-    return html`<input
-      type="range"
-      @change=${(e) =>
-        (TransformationService.rotationIncrement = e.target.value * 0.075)}
-    />`;
+    return html`<input type="range" @change=${this.onChange} />`;
   }
 }

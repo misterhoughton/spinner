@@ -1,12 +1,12 @@
 import { LitElement, html } from "lit-element";
 import { customElement } from "lit/decorators";
-import BackgroundService from "../services/background.service";
 
 @customElement("button-reset")
 class ButtonReset extends LitElement {
+  onClick() {
+    this.dispatchEvent(new CustomEvent("reset"));
+  }
   render() {
-    return html`<button @click="${() => BackgroundService.reset()}">
-      clear
-    </button>`;
+    return html`<button @click="${this.onClick}">Reset</button>`;
   }
 }

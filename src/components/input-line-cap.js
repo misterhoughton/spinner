@@ -1,6 +1,5 @@
 import { LitElement, html } from "lit-element";
 import { customElement } from "lit/decorators";
-import BrushServer from "../services/brush.service";
 
 @customElement("input-line-cap")
 class InputLineCap extends LitElement {
@@ -10,12 +9,16 @@ class InputLineCap extends LitElement {
     };
   }
 
-  setLineCap(e) {
-    BrushServer.lineCap = e.target.value;
+  onChange(e) {
+    this.dispatchEvent(
+      new CustomEvent("line-cap-change", {
+        detail: e.target.value,
+      })
+    );
   }
 
   render() {
-    return html`<fieldset @change="${this.setLineCap}">
+    return html`<fieldset @change="${this.onChange}">
       <legend>Line Cap</legend>
       <label>Butt</label><input type="radio" name="lineCap" value="butt" />
       <label>Round</label><input type="radio" name="lineCap" value="round" />
