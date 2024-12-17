@@ -122,6 +122,7 @@ class MainApp extends LitElement {
           ></input-line-join>
           <select-gco @gco-change=${this.onGcoChange}></select-gco>
           <input-spin-speed
+            value=${this.rotationIncrement}
             @spin-speed-change=${this.onSpinSpeedChange}
           ></input-spin-speed>
           <button-undo @undo=${this.onUndoClick}></button-undo>
