@@ -38,6 +38,7 @@ class MainApp extends LitElement {
     return {
       galleryItems: { type: Array },
       rotationIncrement: { type: Number },
+      lineWidth: { type: Number },
       brushColour: {},
       brushPattern: {},
       thumbnail: {},
@@ -67,6 +68,7 @@ class MainApp extends LitElement {
 
   onLineWidthChange(e) {
     BrushService.lineWidth = e.detail;
+    this.lineWidth = e.detail;
   }
 
   onLineCapChange(e) {
@@ -112,6 +114,7 @@ class MainApp extends LitElement {
             @pattern-change=${this.onPatternChange}
           ></input-brush-pattern>
           <Input-line-width
+            value=${this.lineWidth}
             @line-width-change=${this.onLineWidthChange}
           ></Input-line-width>
           <input-line-cap

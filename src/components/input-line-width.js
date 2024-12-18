@@ -1,10 +1,13 @@
 import { LitElement, html } from "lit-element";
-import { customElement, property } from "lit/decorators";
-import BrushService from "../services/brush.service";
+import { customElement } from "lit/decorators";
 
 @customElement("input-line-width")
 class InputLineWidth extends LitElement {
-  @property({ type: Number }) value;
+  static get properties() {
+    return {
+      value: { type: Number },
+    };
+  }
   constructor() {
     super();
     window.addEventListener("keydown", (e) => {
@@ -21,14 +24,6 @@ class InputLineWidth extends LitElement {
     this.dispatchEvent(
       new CustomEvent("line-width-change", { detail: lineWidth })
     );
-  }
-
-  connectedCallback() {
-    super.connectedCallback();
-    BrushService.lineWidth.subscribe((lineWidth) => {
-      this.value = lineWidth;
-      this.requestUpdate();
-    });
   }
 
   render() {

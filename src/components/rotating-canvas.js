@@ -56,7 +56,7 @@ class RotatingCanvas extends LitElement {
 
   #tick(timeStamp) {
     const newRotationAngle = Math.floor(
-      (this.#rotationAngle + this.rotationIncrement) % 360
+      (this.#rotationAngle + this.rotationIncrement * 0.075) % 360
     );
     if (timeStamp > this.#previousTimeStamp + 1000 / this.fps) {
       this.#previousTimeStamp = timeStamp;
