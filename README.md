@@ -1,6 +1,6 @@
 # Spinner Paint
 
-A dumb little drawing game that took longer than it should have.
+Spin the canvas, make it sing.
 
 ## You'll need
 
