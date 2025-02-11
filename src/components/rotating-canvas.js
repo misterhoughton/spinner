@@ -39,12 +39,7 @@ class RotatingCanvas extends LitElement {
   @property({ type: Number, attribute: "rotation-increment" })
   rotationIncrement;
 
-  constructor() {
-    super();
-    this.fps = 30;
-  }
-
-  #setRef = (_ref) => {
+  #setCanvas = (_ref) => {
     this.canvas = _ref;
   };
 
@@ -217,7 +212,7 @@ class RotatingCanvas extends LitElement {
         style="background-color:${this.colourBg}"
         height="${this.height}"
         width="${this.width}"
-        ${ref(this.#setRef)}
+        ${ref(this.#setCanvas)}
       ></canvas>
     `;
   }

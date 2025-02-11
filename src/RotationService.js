@@ -17,7 +17,6 @@ export class RotationService {
   #frame = 0;
   #rotationAngle = 0;
   #previousTimeStamp = 0;
-  tickFns = new Set();
 
   getRotatedCoords(x, y) {
     const cx = this.canvas.width / 2;
@@ -31,7 +30,6 @@ export class RotationService {
     );
     if (timeStamp > this.#previousTimeStamp + this.framerate) {
       this.#previousTimeStamp = timeStamp;
-      this.tickFns.forEach((fn) => fn());
       this.canvas.style.transform = `rotate(${this.#rotationAngle}deg)`;
       this.#rotationAngle = newRotationAngle;
       this.#frame += this.framerate;
@@ -42,6 +40,4 @@ export class RotationService {
   start() {
     this.window.requestAnimationFrame(this.tick.bind(this));
   }
-
-  stop() {}
 }
