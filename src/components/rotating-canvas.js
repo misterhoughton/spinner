@@ -99,9 +99,6 @@ class RotatingCanvas extends LitElement {
   }
 
   #holdLine(e) {
-    const mouseIsStatic = (e) => {
-      return e.movementX + e.movementY === 0;
-    };
     const touch = e.touches ? e.touches.item(0) : null;
     const changedTouch = e.changedTouches ? e.changedTouches.item(0) : null;
 
@@ -112,14 +109,9 @@ class RotatingCanvas extends LitElement {
       e.layerY = touch.clientY - touch.target.offsetTop;
     }
 
-    if (mouseIsStatic(e)) {
-      // Only add callback if position has changed?
-      const x = e.clientX - e.target.offsetLeft;
-      const y = e.clientY - e.target.offsetTop;
-      this.#callbacks.add(() => this.#drawTransformed(x, y));
-    } else {
-      this.#callbacks.clear();
-    }
+    const x = e.clientX - e.target.offsetLeft;
+    const y = e.clientY - e.target.offsetTop;
+    this.#callbacks.add(() => this.#drawTransformed(x, y));
   }
 
   #requestAnimationFrame() {
@@ -154,7 +146,7 @@ class RotatingCanvas extends LitElement {
 
   stop() {
     if (this.#requestID) {
-      cancelAnimationFrame(requestID);
+      cancelAnimationFrame(this.requestID);
     }
   }
 
