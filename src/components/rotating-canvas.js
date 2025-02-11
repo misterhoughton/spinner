@@ -21,15 +21,6 @@ class RotatingCanvas extends LitElement {
   canvas;
   context2d;
 
-  static styles = css`
-    :host {
-      display: block;
-    }
-    canvas {
-      border-radius: 50%;
-    }
-  `;
-
   @property({}) width;
   @property({}) height;
   @property({ type: Number }) fps;
@@ -208,4 +199,13 @@ class RotatingCanvas extends LitElement {
       ></canvas>
     `;
   }
+
+  static styles = css`
+    :host {
+      display: block;
+    }
+    canvas {
+      border-radius: 50%;
+    }
+  `;
 }
